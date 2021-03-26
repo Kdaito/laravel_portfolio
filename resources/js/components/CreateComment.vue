@@ -3,6 +3,7 @@
         outlined
         tile
         max-width="500px"
+        class="mx-auto"
       >
         <v-card-title class="text-5" v-text="post.title"></v-card-title>
         <v-card-subtitle v-text="post.user.name"></v-card-subtitle>
