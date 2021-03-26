@@ -2190,6 +2190,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2944,6 +2945,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -40655,7 +40657,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "v-card",
-    { attrs: { outlined: "", tile: "" } },
+    { attrs: { outlined: "", tile: "", "max-width": "500px" } },
     [
       _c("v-card-title", {
         staticClass: "text-5",
@@ -41899,7 +41901,7 @@ var render = function() {
     [
       _c(
         "v-card",
-        { attrs: { outlined: "", tile: "" } },
+        { attrs: { outlined: "", tile: "", "max-width": "500px" } },
         [
           _c("v-card-title", {
             staticClass: "text-5",
