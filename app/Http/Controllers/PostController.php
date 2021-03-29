@@ -94,8 +94,11 @@ class PostController extends Controller
         return $posts;
     }
 
-    public function showPosts($userId) {
-        $posts =  Post::with('user')->orderBy('created_at', 'desc')->get();
+    public function showPosts(Request $request) {
+        $userId = $request->userId;
+        $start = $request->start;
+        // $posts =  Post::with('user')->orderBy('created_at', 'desc')->offset($start)->limit(10)->get();;
+        $posts =  Post::with('user')->orderBy('id', 'desc')->skip($start)->take(10)->get();
 
         foreach($posts as $post) {
 

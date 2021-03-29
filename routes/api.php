@@ -18,7 +18,7 @@ Route::post('/login', 'JWTAuthController@login');
 Route::group(['middleware' => 'auth:api'], function () {
 
     Route::apiResource('/posts', 'PostController');
-    Route::get('/posts/showPosts/{userId}', 'PostController@showPosts');
+    Route::post('/posts/showPosts', 'PostController@showPosts');
     Route::post('/posts/userPosts', 'PostController@userPosts');
     Route::post('/posts/likePosts', 'PostController@likePosts');
 

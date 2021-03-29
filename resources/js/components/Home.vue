@@ -39,7 +39,15 @@
           ><v-icon>mdi-pencil</v-icon></v-btn>
         </v-card-actions>
       </v-card>
-      
+      <div class="d-flex justify-center align-center py-8">
+        <v-btn
+          color="primary"
+          elevation="6"
+          rounded
+          x-large
+          @click="morePosts"
+        >もっと見る</v-btn>
+      </div>
     </v-container>
   </div>
 </template>
@@ -48,7 +56,8 @@
 export default {
   data(){
     return{
-      posts: {}
+      posts: {},
+      start: 0,
     }
   },
   mounted(){
@@ -56,9 +65,14 @@ export default {
   },
   methods: {
     getPosts() {
-      axios.get(`/api/posts/showPosts/${this.$store.state.auth.userId}`)
+      axios.post(`/api/posts/showPosts`, {
+        userId: this.$store.state.auth.userId,
+        start: this.start,
+      })
       .then(res => {
+        console.log(res)
         this.posts = res.data
+        this.start += 10
       })
       .catch(err => {
         console.log(err)
@@ -84,6 +98,18 @@ export default {
       axios.post('/api/posts/unfavorites', {
         postId: id,
         userId: this.$store.state.auth.userId,
+      })
+      .catch(err => console.log(err))
+    },
+    morePosts(){
+      axios.post('/api/posts/showPosts', {
+        userId: this.$store.state.auth.userId,
+        start: this.start,
+      })
+      .then(res => {
+        console.log(res)
+        this.posts = this.posts.concat(res.data)
+        this.start += 10 
       })
       .catch(err => console.log(err))
     }
