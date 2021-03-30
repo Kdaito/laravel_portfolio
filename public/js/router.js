@@ -2799,11 +2799,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       posts: {},
-      start: 0
+      start: 0,
+      loading: true
     };
   },
   mounted: function mounted() {
@@ -2820,6 +2830,7 @@ __webpack_require__.r(__webpack_exports__);
         console.log(res);
         _this.posts = res.data;
         _this.start += 10;
+        _this.loading = false;
       })["catch"](function (err) {
         console.log(err);
       });
@@ -2858,13 +2869,14 @@ __webpack_require__.r(__webpack_exports__);
     morePosts: function morePosts() {
       var _this2 = this;
 
+      this.loading = true;
       axios.post('/api/posts/showPosts', {
         userId: this.$store.state.auth.userId,
         start: this.start
       }).then(function (res) {
-        console.log(res);
         _this2.posts = _this2.posts.concat(res.data);
         _this2.start += 10;
+        _this2.loading = false;
       })["catch"](function (err) {
         return console.log(err);
       });
@@ -6340,25 +6352,40 @@ var render = function() {
             "div",
             { staticClass: "d-flex justify-center align-center py-8" },
             [
-              _c(
-                "v-btn",
-                {
-                  attrs: {
-                    color: "primary",
-                    elevation: "6",
-                    rounded: "",
-                    "x-large": ""
-                  },
-                  on: { click: _vm.morePosts }
-                },
-                [_vm._v("もっと見る")]
-              )
+              !_vm.loading
+                ? _c(
+                    "v-btn",
+                    {
+                      attrs: {
+                        color: "primary",
+                        elevation: "6",
+                        rounded: "",
+                        "x-large": ""
+                      },
+                      on: { click: _vm.morePosts }
+                    },
+                    [_vm._v("もっと見る")]
+                  )
+                : _vm._e()
             ],
             1
           )
         ],
         2
-      )
+      ),
+      _vm._v(" "),
+      _vm.loading
+        ? _c(
+            "div",
+            { staticClass: "d-flex justify-center align-center" },
+            [
+              _c("v-progress-circular", {
+                attrs: { size: 70, width: 7, color: "info", indeterminate: "" }
+              })
+            ],
+            1
+          )
+        : _vm._e()
     ],
     1
   )

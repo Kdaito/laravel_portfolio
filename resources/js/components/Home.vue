@@ -45,10 +45,19 @@
           elevation="6"
           rounded
           x-large
+          v-if="!loading"
           @click="morePosts"
         >もっと見る</v-btn>
       </div>
     </v-container>
+    <div class="d-flex justify-center align-center" v-if="loading">
+      <v-progress-circular
+        :size="70"
+        :width="7"
+        color="info"
+        indeterminate
+      ></v-progress-circular>
+    </div>
   </div>
 </template>
 
@@ -58,6 +67,7 @@ export default {
     return{
       posts: {},
       start: 0,
+      loading: true
     }
   },
   mounted(){
@@ -73,6 +83,7 @@ export default {
         console.log(res)
         this.posts = res.data
         this.start += 10
+        this.loading = false
       })
       .catch(err => {
         console.log(err)
@@ -102,14 +113,15 @@ export default {
       .catch(err => console.log(err))
     },
     morePosts(){
+      this.loading = true
       axios.post('/api/posts/showPosts', {
         userId: this.$store.state.auth.userId,
         start: this.start,
       })
       .then(res => {
-        console.log(res)
         this.posts = this.posts.concat(res.data)
         this.start += 10 
+        this.loading = false
       })
       .catch(err => console.log(err))
     }
