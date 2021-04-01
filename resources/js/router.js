@@ -27,7 +27,7 @@ const router = new VueRouter({
     {
       path: '/',
       component: Home,
-      meta: {requiresAuth: true}
+      // meta: {requiresAuth: true}
     },
     {
       path: '/search',
