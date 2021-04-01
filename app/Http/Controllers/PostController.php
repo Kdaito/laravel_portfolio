@@ -55,8 +55,18 @@ class PostController extends Controller
     {
         $id = $request->id;
         $userId = $request->userId;
+        $start = $request->start;
+        $morePosts = true;
 
-        $posts = Post::with('user')->where('user_id', $id)->orderBy('created_at', 'desc')->get();
+        $posts = Post::with('user')->where('user_id', $id)->orderBy('created_at', 'desc')->skip($start)->take(10)->get();
+
+        $morePostsCount = count(Post::with('user')->where('user_id', $id)->orderBy('created_at', 'desc')->skip($start + 10)->take(10)->get());
+
+        if($morePostsCount <= 0) {
+            $morePosts = false;
+        }
+
+
         foreach($posts as $post) {
 
             $heartCount = $post->users()->count();
@@ -69,15 +79,26 @@ class PostController extends Controller
                 $post->hasFavorite = false;
             }
         }
-        return $posts;
+        return response()->json([
+            'posts' => $posts,
+            'morePosts' => $morePosts
+        ]);
     }
 
     public function likePosts(Request $request)
     {
         $id = $request->id;
         $userId = $request->userId;
+        $start = $request->start;
+        $morePosts = true;
 
-        $posts = User::find($id)->favorites()->with('user')->orderBy('created_at', 'desc')->get();
+        $posts = User::find($id)->favorites()->with('user')->orderBy('created_at', 'desc')->skip($start)->take(10)->get();
+
+        $morePostsCount = count(User::find($id)->favorites()->with('user')->orderBy('created_at', 'desc')->skip($start + 10)->take(10)->get());
+
+        if($morePostsCount <= 0) {
+            $morePosts = false;
+        }
 
         foreach($posts as $post) {
 
@@ -91,14 +112,24 @@ class PostController extends Controller
                 $post->hasFavorite = false;
             }
         }
-        return $posts;
+        return response()->json([
+            'posts' => $posts,
+            'morePosts' => $morePosts
+        ]);
     }
 
     public function showPosts(Request $request) {
         $userId = $request->userId;
         $start = $request->start;
-        // $posts =  Post::with('user')->orderBy('created_at', 'desc')->offset($start)->limit(10)->get();;
+        $morePosts = true;
+
         $posts =  Post::with('user')->orderBy('id', 'desc')->skip($start)->take(10)->get();
+
+        $morePostsCount = count(Post::with('user')->orderBy('id', 'desc')->skip($start + 10)->take(10)->get());
+
+        if($morePostsCount <= 0){
+            $morePosts = false;
+        };
 
         foreach($posts as $post) {
 
@@ -113,7 +144,10 @@ class PostController extends Controller
             }
         }
 
-        return $posts;
+        return response()->json([
+            'posts' => $posts,
+            'morePosts' => $morePosts
+        ]);
     }
 
     /**

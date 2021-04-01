@@ -8,7 +8,7 @@
               <v-btn icon color="gley" @click="back"><v-icon>mdi-arrow-left</v-icon></v-btn>
             </v-col>
             <v-col cols="8">
-              <p class="text-md-h6 text-subtitle-1 pt-2 text-center">フォローされているユーザー</p>
+              <p class="text-md-h6 text-subtitle-2 pt-2 text-center">フォローされているユーザー</p>
             </v-col>
             <v-col cols="2"></v-col>
           </v-row>

@@ -45,7 +45,7 @@
           elevation="6"
           rounded
           x-large
-          v-if="!loading"
+          v-if="!loading && existMorePosts"
           @click="morePosts"
         >もっと見る</v-btn>
       </div>
@@ -67,7 +67,8 @@ export default {
     return{
       posts: {},
       start: 0,
-      loading: true
+      loading: true,
+      existMorePosts: true
     }
   },
   mounted(){
@@ -80,8 +81,8 @@ export default {
         start: this.start,
       })
       .then(res => {
-        console.log(res)
-        this.posts = res.data
+        this.posts = res.data.posts
+        this.existMorePosts = res.data.morePosts
         this.start += 10
         this.loading = false
       })
@@ -119,7 +120,8 @@ export default {
         start: this.start,
       })
       .then(res => {
-        this.posts = this.posts.concat(res.data)
+        this.posts = this.posts.concat(res.data.posts)
+        this.existMorePosts = res.data.morePosts
         this.start += 10 
         this.loading = false
       })

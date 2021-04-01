@@ -13,6 +13,15 @@
       </v-container>
     </v-card>
 
+    <div class="d-flex justify-center align-center" v-if="loading">
+      <v-progress-circular
+        :size="70"
+        :width="7"
+        color="info"
+        indeterminate
+      ></v-progress-circular>
+    </div>
+
     <v-card max-width="500px" class="mx-auto pt-5 mt-5" v-for="user in users" :key="user.index" @click.prevent="showProfile(user.id)">
       <div class="d-flex align-center justify-space-between mb-0 pb-0">
           <div>
@@ -53,16 +62,20 @@ export default {
   data(){
     return {
       keyword: '',
-      users: {}
+      users: {},
+      loading: false
     }
   },
   methods:{
     search(){
+      this.users = {}
+      this.loading = true
       axios.post('/api/search', {
         keyword: this.keyword,
         userId: this.$store.state.auth.userId
       })
       .then(res => {
+        this.loading = false
         this.users = res.data
         this.users.forEach(user => {
           const created = user.created_at.split(' ')[0].split('-')

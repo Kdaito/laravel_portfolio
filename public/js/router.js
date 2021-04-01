@@ -2813,7 +2813,8 @@ __webpack_require__.r(__webpack_exports__);
     return {
       posts: {},
       start: 0,
-      loading: true
+      loading: true,
+      existMorePosts: true
     };
   },
   mounted: function mounted() {
@@ -2827,8 +2828,8 @@ __webpack_require__.r(__webpack_exports__);
         userId: this.$store.state.auth.userId,
         start: this.start
       }).then(function (res) {
-        console.log(res);
-        _this.posts = res.data;
+        _this.posts = res.data.posts;
+        _this.existMorePosts = res.data.morePosts;
         _this.start += 10;
         _this.loading = false;
       })["catch"](function (err) {
@@ -2874,7 +2875,8 @@ __webpack_require__.r(__webpack_exports__);
         userId: this.$store.state.auth.userId,
         start: this.start
       }).then(function (res) {
-        _this2.posts = _this2.posts.concat(res.data);
+        _this2.posts = _this2.posts.concat(res.data.posts);
+        _this2.existMorePosts = res.data.morePosts;
         _this2.start += 10;
         _this2.loading = false;
       })["catch"](function (err) {
@@ -3189,10 +3191,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       user: {},
+      loading: false,
       posts: '/profile/' + this.$route.params.id,
       likePosts: '/profile/' + this.$route.params.id + '/likes',
       tab: null
@@ -3201,6 +3215,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
+    this.loading = true;
     axios.post('/api/user', {
       id: this.$route.params.id,
       userId: this.$store.state.auth.userId
@@ -3211,6 +3226,7 @@ __webpack_require__.r(__webpack_exports__);
       var created_at = _this.user.created_at.split('-');
 
       _this.user.created_at = "".concat(created_at[0], "\u5E74").concat(created_at[1], "\u6708").concat(created_at[2], "\u65E5");
+      _this.loading = false;
     })["catch"](function (err) {
       return console.log(err);
     });
@@ -3324,21 +3340,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       keyword: '',
-      users: {}
+      users: {},
+      loading: false
     };
   },
   methods: {
     search: function search() {
       var _this = this;
 
+      this.users = {};
+      this.loading = true;
       axios.post('/api/search', {
         keyword: this.keyword,
         userId: this.$store.state.auth.userId
       }).then(function (res) {
+        _this.loading = false;
         _this.users = res.data;
 
         _this.users.forEach(function (user) {
@@ -3555,20 +3584,49 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      posts: {}
+      posts: {},
+      loading: false,
+      start: 0,
+      existMorePosts: false
     };
   },
   mounted: function mounted() {
     var _this = this;
 
+    this.loading = true;
     axios.post('/api/posts/likePosts/', {
       id: this.$route.params.id,
-      userId: this.$store.state.auth.userId
+      userId: this.$store.state.auth.userId,
+      start: this.start
     }).then(function (res) {
-      _this.posts = res.data;
+      _this.posts = res.data.posts;
+      _this.loading = false;
+      _this.start += 10;
+      _this.existMorePosts = res.data.morePosts;
     })["catch"](function (err) {
       return console.log(err);
     });
@@ -3601,6 +3659,23 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('/api/posts/unfavorites', {
         postId: id,
         userId: this.$store.state.auth.userId
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    },
+    morePosts: function morePosts() {
+      var _this2 = this;
+
+      this.loading = true;
+      axios.post('/api/posts/likePosts/', {
+        id: this.$route.params.id,
+        userId: this.$store.state.auth.userId,
+        start: this.start
+      }).then(function (res) {
+        _this2.posts = _this2.posts.concat(res.data.posts);
+        _this2.start += 10;
+        _this2.existMorePosts = res.data.morePosts;
+        _this2.loading = false;
       })["catch"](function (err) {
         return console.log(err);
       });
@@ -3662,20 +3737,49 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      posts: {}
+      posts: {},
+      loading: false,
+      start: 0,
+      existMorePosts: false
     };
   },
   mounted: function mounted() {
     var _this = this;
 
+    this.loading = true;
     axios.post('/api/posts/userPosts/', {
       id: this.$route.params.id,
-      userId: this.$store.state.auth.userId
+      userId: this.$store.state.auth.userId,
+      start: this.start
     }).then(function (res) {
-      _this.posts = res.data;
+      _this.posts = res.data.posts;
+      _this.loading = false;
+      _this.start += 10;
+      _this.existMorePosts = res.data.morePosts;
     })["catch"](function (err) {
       return console.log(err);
     });
@@ -3708,6 +3812,24 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('/api/posts/unfavorites', {
         postId: id,
         userId: this.$store.state.auth.userId
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    },
+    morePosts: function morePosts() {
+      var _this2 = this;
+
+      this.loading = true;
+      axios.post('/api/posts/likePosts/', {
+        id: this.$route.params.id,
+        userId: this.$store.state.auth.userId,
+        start: this.start
+      }).then(function (res) {
+        console.log(res.data);
+        _this2.posts = _this2.posts.concat(res.data.posts);
+        _this2.start += 10;
+        _this2.existMorePosts = res.data.morePosts;
+        _this2.loading = false;
       })["catch"](function (err) {
         return console.log(err);
       });
@@ -5792,7 +5914,7 @@ var render = function() {
                           "p",
                           {
                             staticClass:
-                              "text-md-h6 text-subtitle-1 pt-2 text-center"
+                              "text-md-h6 text-subtitle-2 pt-2 text-center"
                           },
                           [_vm._v("フォローされているユーザー")]
                         )
@@ -6352,7 +6474,7 @@ var render = function() {
             "div",
             { staticClass: "d-flex justify-center align-center py-8" },
             [
-              !_vm.loading
+              !_vm.loading && _vm.existMorePosts
                 ? _c(
                     "v-btn",
                     {
@@ -6752,187 +6874,210 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c(
-        "v-card",
-        {
-          staticClass: "mx-auto pt-5",
-          attrs: { "max-width": "500px", tile: "" }
-        },
-        [
-          _c(
-            "div",
-            {
-              staticClass: "d-flex align-center justify-space-between mb-0 pb-0"
-            },
-            [
-              _c(
-                "div",
-                [
-                  _c("v-card-title", { staticClass: "pb-2 pt-0" }, [
-                    _vm._v(_vm._s(_vm.user.name))
-                  ])
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                [
-                  _c(
-                    "v-btn",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.user.id == _vm.$store.state.auth.userId,
-                          expression: "user.id == $store.state.auth.userId"
-                        }
+  return _c("div", [
+    !_vm.loading
+      ? _c(
+          "div",
+          [
+            _c(
+              "v-card",
+              {
+                staticClass: "mx-auto pt-5",
+                attrs: { "max-width": "500px", tile: "" }
+              },
+              [
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "d-flex align-center justify-space-between mb-0 pb-0"
+                  },
+                  [
+                    _c(
+                      "div",
+                      [
+                        _c("v-card-title", { staticClass: "pb-2 pt-0" }, [
+                          _vm._v(_vm._s(_vm.user.name))
+                        ])
                       ],
-                      staticClass: "align-self-center mr-2",
-                      attrs: { outlined: "", rounded: "", color: "info" },
-                      on: { click: _vm.editProfile }
-                    },
-                    [_vm._v("編集する")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "v-btn",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value:
-                            _vm.user.id !== _vm.$store.state.auth.userId &&
-                            !_vm.user.follow,
-                          expression:
-                            "user.id !== $store.state.auth.userId && !user.follow"
-                        }
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      [
+                        _c(
+                          "v-btn",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value:
+                                  _vm.user.id == _vm.$store.state.auth.userId,
+                                expression:
+                                  "user.id == $store.state.auth.userId"
+                              }
+                            ],
+                            staticClass: "align-self-center mr-2",
+                            attrs: { outlined: "", rounded: "", color: "info" },
+                            on: { click: _vm.editProfile }
+                          },
+                          [_vm._v("編集する")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "v-btn",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value:
+                                  _vm.user.id !==
+                                    _vm.$store.state.auth.userId &&
+                                  !_vm.user.follow,
+                                expression:
+                                  "user.id !== $store.state.auth.userId && !user.follow"
+                              }
+                            ],
+                            staticClass: "align-self-center mr-2",
+                            attrs: { outlined: "", rounded: "", color: "info" },
+                            on: {
+                              click: function($event) {
+                                $event.stopPropagation()
+                                _vm.follow(_vm.user.id)
+                                _vm.user.follow = true
+                                _vm.user.followedUser++
+                              }
+                            }
+                          },
+                          [_vm._v("フォローする")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "v-btn",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value:
+                                  _vm.user.id !==
+                                    _vm.$store.state.auth.userId &&
+                                  _vm.user.follow,
+                                expression:
+                                  "user.id !== $store.state.auth.userId && user.follow"
+                              }
+                            ],
+                            staticClass: "align-self-center mr-2",
+                            attrs: { dark: "", rounded: "", color: "info" },
+                            on: {
+                              click: function($event) {
+                                $event.stopPropagation()
+                                _vm.unfollow(_vm.user.id)
+                                _vm.user.follow = false
+                                _vm.user.followedUser--
+                              }
+                            }
+                          },
+                          [_vm._v("フォロー中")]
+                        )
                       ],
-                      staticClass: "align-self-center mr-2",
-                      attrs: { outlined: "", rounded: "", color: "info" },
-                      on: {
-                        click: function($event) {
-                          $event.stopPropagation()
-                          _vm.follow(_vm.user.id)
-                          _vm.user.follow = true
-                          _vm.user.followedUser++
+                      1
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("v-card-text", { staticClass: "pb-5" }, [
+                  _vm._v(_vm._s(_vm.user.text))
+                ]),
+                _vm._v(" "),
+                _c("v-card-subtitle", { staticClass: "pt-0" }, [
+                  _vm._v(_vm._s(_vm.user.created_at) + "から利用しています")
+                ]),
+                _vm._v(" "),
+                _c("v-divider", { staticClass: "py-0 my-0" }),
+                _vm._v(" "),
+                _c(
+                  "v-card-subtitle",
+                  { staticClass: "py-2" },
+                  [
+                    _c(
+                      "v-btn",
+                      {
+                        staticClass: "m-0 p-0",
+                        attrs: { text: "" },
+                        on: {
+                          click: function($event) {
+                            return _vm.followingUsers(_vm.user.id)
+                          }
                         }
-                      }
-                    },
-                    [_vm._v("フォローする")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "v-btn",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value:
-                            _vm.user.id !== _vm.$store.state.auth.userId &&
-                            _vm.user.follow,
-                          expression:
-                            "user.id !== $store.state.auth.userId && user.follow"
+                      },
+                      [_vm._v("フォロー中: " + _vm._s(_vm.user.followingUser))]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "v-btn",
+                      {
+                        staticClass: "m-0 p-0",
+                        attrs: { text: "" },
+                        on: {
+                          click: function($event) {
+                            return _vm.followedUsers(_vm.user.id)
+                          }
                         }
-                      ],
-                      staticClass: "align-self-center mr-2",
-                      attrs: { dark: "", rounded: "", color: "info" },
-                      on: {
-                        click: function($event) {
-                          $event.stopPropagation()
-                          _vm.unfollow(_vm.user.id)
-                          _vm.user.follow = false
-                          _vm.user.followedUser--
-                        }
-                      }
-                    },
-                    [_vm._v("フォロー中")]
-                  )
-                ],
-                1
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c("v-card-text", { staticClass: "pb-5" }, [
-            _vm._v(_vm._s(_vm.user.text))
-          ]),
-          _vm._v(" "),
-          _c("v-card-subtitle", { staticClass: "pt-0" }, [
-            _vm._v(_vm._s(_vm.user.created_at) + "から利用しています")
-          ]),
-          _vm._v(" "),
-          _c("v-divider", { staticClass: "py-0 my-0" }),
-          _vm._v(" "),
-          _c(
-            "v-card-subtitle",
-            { staticClass: "py-2" },
-            [
-              _c(
-                "v-btn",
-                {
-                  staticClass: "m-0 p-0",
-                  attrs: { text: "" },
-                  on: {
-                    click: function($event) {
-                      return _vm.followingUsers(_vm.user.id)
-                    }
-                  }
-                },
-                [_vm._v("フォロー中: " + _vm._s(_vm.user.followingUser))]
-              ),
-              _vm._v(" "),
-              _c(
-                "v-btn",
-                {
-                  staticClass: "m-0 p-0",
-                  attrs: { text: "" },
-                  on: {
-                    click: function($event) {
-                      return _vm.followedUsers(_vm.user.id)
-                    }
-                  }
-                },
-                [_vm._v("フォロワー: " + _vm._s(_vm.user.followedUser))]
-              )
-            ],
-            1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "v-card",
-        {
-          staticClass: "mx-auto",
-          attrs: { outlined: "", "max-width": "500px", tile: "" }
-        },
-        [
-          _c(
-            "v-tabs",
-            { attrs: { "fixed-tabs": "" } },
-            [
-              _c("v-tab", { on: { click: _vm.post } }, [_vm._v("投稿")]),
-              _vm._v(" "),
-              _c("v-tab", { on: { click: _vm.like } }, [_vm._v("いいね")])
-            ],
-            1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c("router-view")
-    ],
-    1
-  )
+                      },
+                      [_vm._v("フォロワー: " + _vm._s(_vm.user.followedUser))]
+                    )
+                  ],
+                  1
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "v-card",
+              {
+                staticClass: "mx-auto",
+                attrs: { outlined: "", "max-width": "500px", tile: "" }
+              },
+              [
+                _c(
+                  "v-tabs",
+                  { attrs: { "fixed-tabs": "" } },
+                  [
+                    _c("v-tab", { on: { click: _vm.post } }, [_vm._v("投稿")]),
+                    _vm._v(" "),
+                    _c("v-tab", { on: { click: _vm.like } }, [_vm._v("いいね")])
+                  ],
+                  1
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c("router-view")
+          ],
+          1
+        )
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.loading
+      ? _c(
+          "div",
+          { staticClass: "d-flex justify-center align-center" },
+          [
+            _c("v-progress-circular", {
+              staticClass: "mt-5",
+              attrs: { size: 70, width: 7, color: "info", indeterminate: "" }
+            })
+          ],
+          1
+        )
+      : _vm._e()
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -7013,6 +7158,19 @@ var render = function() {
         ],
         1
       ),
+      _vm._v(" "),
+      _vm.loading
+        ? _c(
+            "div",
+            { staticClass: "d-flex justify-center align-center" },
+            [
+              _c("v-progress-circular", {
+                attrs: { size: 70, width: 7, color: "info", indeterminate: "" }
+              })
+            ],
+            1
+          )
+        : _vm._e(),
       _vm._v(" "),
       _vm._l(_vm.users, function(user) {
         return _c(
@@ -7379,157 +7537,199 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    _vm._l(_vm.posts, function(post) {
-      return _c(
-        "v-card",
-        {
-          key: post.id,
-          staticClass: "mx-auto",
-          attrs: { outlined: "", tile: "", "max-width": "500px" }
-        },
-        [
-          _c("v-card-title", {
-            staticClass: "text-5",
-            domProps: { textContent: _vm._s(post.title) }
-          }),
-          _vm._v(" "),
-          _c("v-card-subtitle", {
-            domProps: { textContent: _vm._s(post.user.name) }
-          }),
-          _vm._v(" "),
-          _c("v-card-text", {
-            staticClass: "text-h6",
-            domProps: { textContent: _vm._s(post.text) }
-          }),
-          _vm._v(" "),
-          _c("v-card-subtitle", {
-            staticClass: "py-0",
-            domProps: { textContent: _vm._s(post.created_at) }
-          }),
-          _vm._v(" "),
-          _c(
-            "v-card-actions",
-            { staticClass: "d-flex align-center justify-center pb-6" },
+  return _c("div", [
+    _c(
+      "div",
+      [
+        _vm._l(_vm.posts, function(post) {
+          return _c(
+            "v-card",
+            {
+              key: post.index,
+              staticClass: "mx-auto",
+              attrs: { outlined: "", tile: "", "max-width": "500px" }
+            },
             [
-              _c(
-                "v-btn",
-                {
-                  staticClass: "mx-md-7 mx-3",
-                  attrs: { icon: "", color: "gley" },
-                  on: {
-                    click: function($event) {
-                      return _vm.detailPost(post.id)
-                    }
-                  }
-                },
-                [_c("v-icon", [_vm._v("mdi-clipboard-text")])],
-                1
-              ),
+              _c("v-card-title", {
+                staticClass: "text-5",
+                domProps: { textContent: _vm._s(post.title) }
+              }),
+              _vm._v(" "),
+              _c("v-card-subtitle", {
+                domProps: { textContent: _vm._s(post.user.name) }
+              }),
+              _vm._v(" "),
+              _c("v-card-text", {
+                staticClass: "text-h6",
+                domProps: { textContent: _vm._s(post.text) }
+              }),
+              _vm._v(" "),
+              _c("v-card-subtitle", {
+                staticClass: "py-0",
+                domProps: { textContent: _vm._s(post.created_at) }
+              }),
               _vm._v(" "),
               _c(
-                "v-btn",
-                {
-                  staticClass: "mx-md-7 mx-3",
-                  attrs: { icon: "", color: "gley" },
-                  on: {
-                    click: function($event) {
-                      return _vm.createComment(post.id)
-                    }
-                  }
-                },
-                [_c("v-icon", [_vm._v("mdi-message-reply")])],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "v-btn",
-                {
-                  directives: [
-                    {
-                      name: "show",
-                      rawName: "v-show",
-                      value: !post.hasFavorite,
-                      expression: "!post.hasFavorite"
-                    }
-                  ],
-                  staticClass: "mx-md-7 mx-3",
-                  attrs: { icon: "", color: "gley" },
-                  on: {
-                    click: function($event) {
-                      _vm.favorite(post.id)
-                      post.hasFavorite = true
-                      post.heartCount++
-                    }
-                  }
-                },
+                "v-card-actions",
+                { staticClass: "d-flex align-center justify-center pb-6" },
                 [
-                  _c("v-icon", [_vm._v("mdi-heart")]),
-                  _vm._v(_vm._s(post.heartCount))
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "v-btn",
-                {
-                  directives: [
+                  _c(
+                    "v-btn",
                     {
-                      name: "show",
-                      rawName: "v-show",
-                      value: post.hasFavorite,
-                      expression: "post.hasFavorite"
-                    }
-                  ],
-                  staticClass: "mx-md-7 mx-3",
-                  attrs: { icon: "", color: "pink" },
-                  on: {
-                    click: function($event) {
-                      _vm.unfavorite(post.id)
-                      post.hasFavorite = false
-                      post.heartCount--
-                    }
-                  }
-                },
-                [
-                  _c("v-icon", [_vm._v("mdi-heart")]),
-                  _vm._v(_vm._s(post.heartCount))
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "v-btn",
-                {
-                  directives: [
+                      staticClass: "mx-md-7 mx-3",
+                      attrs: { icon: "", color: "gley" },
+                      on: {
+                        click: function($event) {
+                          return _vm.detailPost(post.id)
+                        }
+                      }
+                    },
+                    [_c("v-icon", [_vm._v("mdi-clipboard-text")])],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
                     {
-                      name: "show",
-                      rawName: "v-show",
-                      value: post.user.id === _vm.$store.state.auth.userId,
-                      expression: "post.user.id === $store.state.auth.userId"
-                    }
-                  ],
-                  staticClass: "mx-md-7 mx-3",
-                  attrs: { icon: "", color: "gley" },
-                  on: {
-                    click: function($event) {
-                      return _vm.editPost(post.id)
-                    }
-                  }
-                },
-                [_c("v-icon", [_vm._v("mdi-pencil")])],
+                      staticClass: "mx-md-7 mx-3",
+                      attrs: { icon: "", color: "gley" },
+                      on: {
+                        click: function($event) {
+                          return _vm.createComment(post.id)
+                        }
+                      }
+                    },
+                    [_c("v-icon", [_vm._v("mdi-message-reply")])],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: !post.hasFavorite,
+                          expression: "!post.hasFavorite"
+                        }
+                      ],
+                      staticClass: "mx-md-7 mx-3",
+                      attrs: { icon: "", color: "gley" },
+                      on: {
+                        click: function($event) {
+                          _vm.favorite(post.id)
+                          post.hasFavorite = true
+                          post.heartCount++
+                        }
+                      }
+                    },
+                    [
+                      _c("v-icon", [_vm._v("mdi-heart")]),
+                      _vm._v(_vm._s(post.heartCount))
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: post.hasFavorite,
+                          expression: "post.hasFavorite"
+                        }
+                      ],
+                      staticClass: "mx-md-7 mx-3",
+                      attrs: { icon: "", color: "pink" },
+                      on: {
+                        click: function($event) {
+                          _vm.unfavorite(post.id)
+                          post.hasFavorite = false
+                          post.heartCount--
+                        }
+                      }
+                    },
+                    [
+                      _c("v-icon", [_vm._v("mdi-heart")]),
+                      _vm._v(_vm._s(post.heartCount))
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: post.user.id === _vm.$store.state.auth.userId,
+                          expression:
+                            "post.user.id === $store.state.auth.userId"
+                        }
+                      ],
+                      staticClass: "mx-md-7 mx-3",
+                      attrs: { icon: "", color: "gley" },
+                      on: {
+                        click: function($event) {
+                          return _vm.editPost(post.id)
+                        }
+                      }
+                    },
+                    [_c("v-icon", [_vm._v("mdi-pencil")])],
+                    1
+                  )
+                ],
                 1
               )
             ],
             1
           )
-        ],
-        1
-      )
-    }),
-    1
-  )
+        }),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "d-flex justify-center align-center py-8" },
+          [
+            !_vm.loading && _vm.existMorePosts
+              ? _c(
+                  "v-btn",
+                  {
+                    attrs: {
+                      color: "primary",
+                      elevation: "6",
+                      rounded: "",
+                      "x-large": ""
+                    },
+                    on: { click: _vm.morePosts }
+                  },
+                  [_vm._v("もっと見る")]
+                )
+              : _vm._e()
+          ],
+          1
+        )
+      ],
+      2
+    ),
+    _vm._v(" "),
+    _vm.loading
+      ? _c(
+          "div",
+          { staticClass: "d-flex justify-center align-center" },
+          [
+            _c("v-progress-circular", {
+              staticClass: "mt-5",
+              attrs: { size: 70, width: 7, color: "info", indeterminate: "" }
+            })
+          ],
+          1
+        )
+      : _vm._e()
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -7553,157 +7753,199 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    _vm._l(_vm.posts, function(post) {
-      return _c(
-        "v-card",
-        {
-          key: post.id,
-          staticClass: "mx-auto",
-          attrs: { outlined: "", tile: "", "max-width": "500px" }
-        },
-        [
-          _c("v-card-title", {
-            staticClass: "text-5",
-            domProps: { textContent: _vm._s(post.title) }
-          }),
-          _vm._v(" "),
-          _c("v-card-subtitle", {
-            domProps: { textContent: _vm._s(post.user.name) }
-          }),
-          _vm._v(" "),
-          _c("v-card-text", {
-            staticClass: "text-h6",
-            domProps: { textContent: _vm._s(post.text) }
-          }),
-          _vm._v(" "),
-          _c("v-card-subtitle", {
-            staticClass: "py-0",
-            domProps: { textContent: _vm._s(post.created_at) }
-          }),
-          _vm._v(" "),
-          _c(
-            "v-card-actions",
-            { staticClass: "d-flex align-center justify-center pb-6" },
+  return _c("div", [
+    _c(
+      "div",
+      [
+        _vm._l(_vm.posts, function(post) {
+          return _c(
+            "v-card",
+            {
+              key: post.index,
+              staticClass: "mx-auto",
+              attrs: { outlined: "", tile: "", "max-width": "500px" }
+            },
             [
-              _c(
-                "v-btn",
-                {
-                  staticClass: "mx-md-7 mx-3",
-                  attrs: { icon: "", color: "gley" },
-                  on: {
-                    click: function($event) {
-                      return _vm.detailPost(post.id)
-                    }
-                  }
-                },
-                [_c("v-icon", [_vm._v("mdi-clipboard-text")])],
-                1
-              ),
+              _c("v-card-title", {
+                staticClass: "text-5",
+                domProps: { textContent: _vm._s(post.title) }
+              }),
+              _vm._v(" "),
+              _c("v-card-subtitle", {
+                domProps: { textContent: _vm._s(post.user.name) }
+              }),
+              _vm._v(" "),
+              _c("v-card-text", {
+                staticClass: "text-h6",
+                domProps: { textContent: _vm._s(post.text) }
+              }),
+              _vm._v(" "),
+              _c("v-card-subtitle", {
+                staticClass: "py-0",
+                domProps: { textContent: _vm._s(post.created_at) }
+              }),
               _vm._v(" "),
               _c(
-                "v-btn",
-                {
-                  staticClass: "mx-md-7 mx-3",
-                  attrs: { icon: "", color: "gley" },
-                  on: {
-                    click: function($event) {
-                      return _vm.createComment(post.id)
-                    }
-                  }
-                },
-                [_c("v-icon", [_vm._v("mdi-message-reply")])],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "v-btn",
-                {
-                  directives: [
-                    {
-                      name: "show",
-                      rawName: "v-show",
-                      value: !post.hasFavorite,
-                      expression: "!post.hasFavorite"
-                    }
-                  ],
-                  staticClass: "mx-md-7 mx-3",
-                  attrs: { icon: "", color: "gley" },
-                  on: {
-                    click: function($event) {
-                      _vm.favorite(post.id)
-                      post.hasFavorite = true
-                      post.heartCount++
-                    }
-                  }
-                },
+                "v-card-actions",
+                { staticClass: "d-flex align-center justify-center pb-6" },
                 [
-                  _c("v-icon", [_vm._v("mdi-heart")]),
-                  _vm._v(_vm._s(post.heartCount))
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "v-btn",
-                {
-                  directives: [
+                  _c(
+                    "v-btn",
                     {
-                      name: "show",
-                      rawName: "v-show",
-                      value: post.hasFavorite,
-                      expression: "post.hasFavorite"
-                    }
-                  ],
-                  staticClass: "mx-md-7 mx-3",
-                  attrs: { icon: "", color: "pink" },
-                  on: {
-                    click: function($event) {
-                      _vm.unfavorite(post.id)
-                      post.hasFavorite = false
-                      post.heartCount--
-                    }
-                  }
-                },
-                [
-                  _c("v-icon", [_vm._v("mdi-heart")]),
-                  _vm._v(_vm._s(post.heartCount))
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "v-btn",
-                {
-                  directives: [
+                      staticClass: "mx-md-7 mx-3",
+                      attrs: { icon: "", color: "gley" },
+                      on: {
+                        click: function($event) {
+                          return _vm.detailPost(post.id)
+                        }
+                      }
+                    },
+                    [_c("v-icon", [_vm._v("mdi-clipboard-text")])],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
                     {
-                      name: "show",
-                      rawName: "v-show",
-                      value: post.user.id === _vm.$store.state.auth.userId,
-                      expression: "post.user.id === $store.state.auth.userId"
-                    }
-                  ],
-                  staticClass: "mx-md-7 mx-3",
-                  attrs: { icon: "", color: "gley" },
-                  on: {
-                    click: function($event) {
-                      return _vm.editPost(post.id)
-                    }
-                  }
-                },
-                [_c("v-icon", [_vm._v("mdi-pencil")])],
+                      staticClass: "mx-md-7 mx-3",
+                      attrs: { icon: "", color: "gley" },
+                      on: {
+                        click: function($event) {
+                          return _vm.createComment(post.id)
+                        }
+                      }
+                    },
+                    [_c("v-icon", [_vm._v("mdi-message-reply")])],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: !post.hasFavorite,
+                          expression: "!post.hasFavorite"
+                        }
+                      ],
+                      staticClass: "mx-md-7 mx-3",
+                      attrs: { icon: "", color: "gley" },
+                      on: {
+                        click: function($event) {
+                          _vm.favorite(post.id)
+                          post.hasFavorite = true
+                          post.heartCount++
+                        }
+                      }
+                    },
+                    [
+                      _c("v-icon", [_vm._v("mdi-heart")]),
+                      _vm._v(_vm._s(post.heartCount))
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: post.hasFavorite,
+                          expression: "post.hasFavorite"
+                        }
+                      ],
+                      staticClass: "mx-md-7 mx-3",
+                      attrs: { icon: "", color: "pink" },
+                      on: {
+                        click: function($event) {
+                          _vm.unfavorite(post.id)
+                          post.hasFavorite = false
+                          post.heartCount--
+                        }
+                      }
+                    },
+                    [
+                      _c("v-icon", [_vm._v("mdi-heart")]),
+                      _vm._v(_vm._s(post.heartCount))
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: post.user.id === _vm.$store.state.auth.userId,
+                          expression:
+                            "post.user.id === $store.state.auth.userId"
+                        }
+                      ],
+                      staticClass: "mx-md-7 mx-3",
+                      attrs: { icon: "", color: "gley" },
+                      on: {
+                        click: function($event) {
+                          return _vm.editPost(post.id)
+                        }
+                      }
+                    },
+                    [_c("v-icon", [_vm._v("mdi-pencil")])],
+                    1
+                  )
+                ],
                 1
               )
             ],
             1
           )
-        ],
-        1
-      )
-    }),
-    1
-  )
+        }),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "d-flex justify-center align-center py-8" },
+          [
+            !_vm.loading && _vm.existMorePosts
+              ? _c(
+                  "v-btn",
+                  {
+                    attrs: {
+                      color: "primary",
+                      elevation: "6",
+                      rounded: "",
+                      "x-large": ""
+                    },
+                    on: { click: _vm.morePosts }
+                  },
+                  [_vm._v("もっと見る")]
+                )
+              : _vm._e()
+          ],
+          1
+        )
+      ],
+      2
+    ),
+    _vm._v(" "),
+    _vm.loading
+      ? _c(
+          "div",
+          { staticClass: "d-flex justify-center align-center" },
+          [
+            _c("v-progress-circular", {
+              staticClass: "mt-5",
+              attrs: { size: 70, width: 7, color: "info", indeterminate: "" }
+            })
+          ],
+          1
+        )
+      : _vm._e()
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
