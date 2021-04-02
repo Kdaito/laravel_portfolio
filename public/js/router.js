@@ -5391,9 +5391,11 @@ var render = function() {
         domProps: { textContent: _vm._s(_vm.post.title) }
       }),
       _vm._v(" "),
-      _c("v-card-subtitle", {
-        domProps: { textContent: _vm._s(_vm.post.user.name) }
-      }),
+      _vm.post.user
+        ? _c("v-card-subtitle", {
+            domProps: { textContent: _vm._s(_vm.post.user.name) }
+          })
+        : _vm._e(),
       _vm._v(" "),
       _c("v-card-text", {
         staticClass: "text-h6",
