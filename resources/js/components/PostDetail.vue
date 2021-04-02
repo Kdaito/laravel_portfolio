@@ -5,10 +5,9 @@
         tile
         max-width="500px"
         class="mx-auto"
-        v-if="post"
       >
-        <v-card-title class="text-5" v-text="post.title"></v-card-title>
-        <v-card-subtitle v-text="post.user.name"></v-card-subtitle>
+        <v-card-title class="text-5"  v-text="post.title"></v-card-title>
+        <v-card-subtitle v-if="post.user" v-text="post.user.name"></v-card-subtitle>
         <v-card-text class="text-h6" v-text="post.text"></v-card-text>
         <v-card-subtitle class="py-0 pb-2" v-text="post.created_at"></v-card-subtitle>
         <v-divider class="py-0 my-0"></v-divider>

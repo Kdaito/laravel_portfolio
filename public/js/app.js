@@ -3045,7 +3045,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -42106,171 +42105,169 @@ var render = function() {
   return _c(
     "div",
     [
-      _vm.post
-        ? _c(
-            "v-card",
-            {
-              staticClass: "mx-auto",
-              attrs: { outlined: "", tile: "", "max-width": "500px" }
-            },
-            [
-              _c("v-card-title", {
-                staticClass: "text-5",
-                domProps: { textContent: _vm._s(_vm.post.title) }
-              }),
-              _vm._v(" "),
-              _c("v-card-subtitle", {
+      _c(
+        "v-card",
+        {
+          staticClass: "mx-auto",
+          attrs: { outlined: "", tile: "", "max-width": "500px" }
+        },
+        [
+          _c("v-card-title", {
+            staticClass: "text-5",
+            domProps: { textContent: _vm._s(_vm.post.title) }
+          }),
+          _vm._v(" "),
+          _vm.post.user
+            ? _c("v-card-subtitle", {
                 domProps: { textContent: _vm._s(_vm.post.user.name) }
-              }),
-              _vm._v(" "),
-              _c("v-card-text", {
-                staticClass: "text-h6",
-                domProps: { textContent: _vm._s(_vm.post.text) }
-              }),
-              _vm._v(" "),
-              _c("v-card-subtitle", {
-                staticClass: "py-0 pb-2",
-                domProps: { textContent: _vm._s(_vm.post.created_at) }
-              }),
-              _vm._v(" "),
-              _c("v-divider", { staticClass: "py-0 my-0" }),
-              _vm._v(" "),
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _c("v-card-text", {
+            staticClass: "text-h6",
+            domProps: { textContent: _vm._s(_vm.post.text) }
+          }),
+          _vm._v(" "),
+          _c("v-card-subtitle", {
+            staticClass: "py-0 pb-2",
+            domProps: { textContent: _vm._s(_vm.post.created_at) }
+          }),
+          _vm._v(" "),
+          _c("v-divider", { staticClass: "py-0 my-0" }),
+          _vm._v(" "),
+          _c(
+            "v-card-subtitle",
+            { staticClass: "py-2" },
+            [
               _c(
-                "v-card-subtitle",
-                { staticClass: "py-2" },
-                [
-                  _c(
-                    "v-btn",
-                    {
-                      staticClass: "m-0 p-0",
-                      attrs: { text: "" },
-                      on: {
-                        click: function($event) {
-                          return _vm.like(_vm.post.id)
-                        }
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.heartCount) + "件のいいね")]
-                  )
-                ],
+                "v-btn",
+                {
+                  staticClass: "m-0 p-0",
+                  attrs: { text: "" },
+                  on: {
+                    click: function($event) {
+                      return _vm.like(_vm.post.id)
+                    }
+                  }
+                },
+                [_vm._v(_vm._s(_vm.heartCount) + "件のいいね")]
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("v-divider", { staticClass: "py-0 my-0" }),
+          _vm._v(" "),
+          _c("v-card-subtitle", { staticClass: "py-2" }, [
+            _vm._v(_vm._s(_vm.comments.length) + "件のコメント")
+          ]),
+          _vm._v(" "),
+          _c("v-divider", { staticClass: "py-0 my-0" }),
+          _vm._v(" "),
+          _c(
+            "v-card-actions",
+            { staticClass: "d-flex align-center justify-center pb-6" },
+            [
+              _c(
+                "v-btn",
+                {
+                  staticClass: "mx-md-7 mx-3",
+                  attrs: { icon: "", color: "gley" },
+                  on: { click: _vm.back }
+                },
+                [_c("v-icon", [_vm._v("mdi-arrow-left")])],
                 1
               ),
               _vm._v(" "),
-              _c("v-divider", { staticClass: "py-0 my-0" }),
-              _vm._v(" "),
-              _c("v-card-subtitle", { staticClass: "py-2" }, [
-                _vm._v(_vm._s(_vm.comments.length) + "件のコメント")
-              ]),
-              _vm._v(" "),
-              _c("v-divider", { staticClass: "py-0 my-0" }),
+              _c(
+                "v-btn",
+                {
+                  staticClass: "mx-md-7 mx-3",
+                  attrs: { icon: "", color: "gley" },
+                  on: {
+                    click: function($event) {
+                      return _vm.createComment(_vm.post.id)
+                    }
+                  }
+                },
+                [_c("v-icon", [_vm._v("mdi-message-reply")])],
+                1
+              ),
               _vm._v(" "),
               _c(
-                "v-card-actions",
-                { staticClass: "d-flex align-center justify-center pb-6" },
-                [
-                  _c(
-                    "v-btn",
+                "v-btn",
+                {
+                  directives: [
                     {
-                      staticClass: "mx-md-7 mx-3",
-                      attrs: { icon: "", color: "gley" },
-                      on: { click: _vm.back }
-                    },
-                    [_c("v-icon", [_vm._v("mdi-arrow-left")])],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "v-btn",
+                      name: "show",
+                      rawName: "v-show",
+                      value: !_vm.hasHeart,
+                      expression: "!hasHeart"
+                    }
+                  ],
+                  staticClass: "mx-md-7 mx-3",
+                  attrs: { icon: "", color: "gley" },
+                  on: {
+                    click: function($event) {
+                      return _vm.favorite(_vm.post.id)
+                    }
+                  }
+                },
+                [_c("v-icon", [_vm._v("mdi-heart")])],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-btn",
+                {
+                  directives: [
                     {
-                      staticClass: "mx-md-7 mx-3",
-                      attrs: { icon: "", color: "gley" },
-                      on: {
-                        click: function($event) {
-                          return _vm.createComment(_vm.post.id)
-                        }
-                      }
-                    },
-                    [_c("v-icon", [_vm._v("mdi-message-reply")])],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "v-btn",
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.hasHeart,
+                      expression: "hasHeart"
+                    }
+                  ],
+                  staticClass: "mx-md-7 mx-3",
+                  attrs: { icon: "", color: "pink" },
+                  on: {
+                    click: function($event) {
+                      return _vm.unfavorite(_vm.post.id)
+                    }
+                  }
+                },
+                [_c("v-icon", [_vm._v("mdi-heart")])],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-btn",
+                {
+                  directives: [
                     {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: !_vm.hasHeart,
-                          expression: "!hasHeart"
-                        }
-                      ],
-                      staticClass: "mx-md-7 mx-3",
-                      attrs: { icon: "", color: "gley" },
-                      on: {
-                        click: function($event) {
-                          return _vm.favorite(_vm.post.id)
-                        }
-                      }
-                    },
-                    [_c("v-icon", [_vm._v("mdi-heart")])],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "v-btn",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.hasHeart,
-                          expression: "hasHeart"
-                        }
-                      ],
-                      staticClass: "mx-md-7 mx-3",
-                      attrs: { icon: "", color: "pink" },
-                      on: {
-                        click: function($event) {
-                          return _vm.unfavorite(_vm.post.id)
-                        }
-                      }
-                    },
-                    [_c("v-icon", [_vm._v("mdi-heart")])],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "v-btn",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value:
-                            _vm.post.user.id === _vm.$store.state.auth.userId,
-                          expression:
-                            "post.user.id === $store.state.auth.userId"
-                        }
-                      ],
-                      staticClass: "mx-md-7 mx-3",
-                      attrs: { icon: "", color: "gley" },
-                      on: {
-                        click: function($event) {
-                          return _vm.editPost(_vm.post.id)
-                        }
-                      }
-                    },
-                    [_c("v-icon", [_vm._v("mdi-pencil")])],
-                    1
-                  )
-                ],
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.post.user.id === _vm.$store.state.auth.userId,
+                      expression: "post.user.id === $store.state.auth.userId"
+                    }
+                  ],
+                  staticClass: "mx-md-7 mx-3",
+                  attrs: { icon: "", color: "gley" },
+                  on: {
+                    click: function($event) {
+                      return _vm.editPost(_vm.post.id)
+                    }
+                  }
+                },
+                [_c("v-icon", [_vm._v("mdi-pencil")])],
                 1
               )
             ],
             1
           )
-        : _vm._e(),
+        ],
+        1
+      ),
       _vm._v(" "),
       _vm._l(_vm.comments, function(comment) {
         return _c(
