@@ -74,7 +74,7 @@ export default {
   },
   mounted(){
     this.loading = true
-    axios.post('/api/posts/likePosts/', {
+    axios.post('/api/posts/likePosts', {
       id: this.$route.params.id,
       userId: this.$store.state.auth.userId,
       start: this.start
@@ -113,7 +113,7 @@ export default {
     },
     morePosts(){
       this.loading = true
-      axios.post('/api/posts/likePosts/', {
+      axios.post('/api/posts/likePosts', {
         id: this.$route.params.id,
         userId: this.$store.state.auth.userId,
         start: this.start

@@ -2481,7 +2481,7 @@ __webpack_require__.r(__webpack_exports__);
     editProfile: function editProfile() {
       var _this = this;
 
-      axios.post('/api/editProfile/', {
+      axios.post('/api/editProfile', {
         user_id: this.$store.state.auth.userId,
         text: this.text
       }).then(function (res) {
@@ -2687,7 +2687,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
-    axios.post('/api/user/follow/', {
+    axios.post('/api/user/follow', {
       id: this.$route.params.id,
       userId: this.$store.state.auth.userId
     }).then(function (res) {
@@ -2964,7 +2964,7 @@ __webpack_require__.r(__webpack_exports__);
     createPost: function createPost() {
       var _this = this;
 
-      axios.post('https://hirotolaravelproduct.herokuapp.com/api/posts', {
+      axios.post('/api/posts', {
         user_id: this.$store.state.auth.userId,
         title: this.title,
         text: this.text
@@ -3618,7 +3618,7 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     this.loading = true;
-    axios.post('/api/posts/likePosts/', {
+    axios.post('/api/posts/likePosts', {
       id: this.$route.params.id,
       userId: this.$store.state.auth.userId,
       start: this.start
@@ -3667,7 +3667,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       this.loading = true;
-      axios.post('/api/posts/likePosts/', {
+      axios.post('/api/posts/likePosts', {
         id: this.$route.params.id,
         userId: this.$store.state.auth.userId,
         start: this.start
@@ -3771,7 +3771,7 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     this.loading = true;
-    axios.post('/api/posts/userPosts/', {
+    axios.post('/api/posts/userPosts', {
       id: this.$route.params.id,
       userId: this.$store.state.auth.userId,
       start: this.start
@@ -3820,7 +3820,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       this.loading = true;
-      axios.post('/api/posts/likePosts/', {
+      axios.post('/api/posts/likePosts', {
         id: this.$route.params.id,
         userId: this.$store.state.auth.userId,
         start: this.start

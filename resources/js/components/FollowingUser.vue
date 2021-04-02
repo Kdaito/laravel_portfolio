@@ -60,7 +60,7 @@ export default {
     }
   },
   mounted(){
-    axios.post('/api/user/follow/' ,{
+    axios.post('/api/user/follow' ,{
       id: this.$route.params.id,
       userId: this.$store.state.auth.userId,
     })

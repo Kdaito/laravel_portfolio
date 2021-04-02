@@ -61,7 +61,7 @@ export default {
       this.$router.go(-1)
     },
     editProfile(){
-      axios.post('/api/editProfile/', {
+      axios.post('/api/editProfile', {
         user_id: this.$store.state.auth.userId,
         text: this.text
       })
