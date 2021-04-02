@@ -2964,7 +2964,7 @@ __webpack_require__.r(__webpack_exports__);
     createPost: function createPost() {
       var _this = this;
 
-      axios.post('/api/posts/', {
+      axios.post('https://hirotolaravelproduct.herokuapp.com/api/posts/', {
         user_id: this.$store.state.auth.userId,
         title: this.title,
         text: this.text
