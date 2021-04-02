@@ -3045,6 +3045,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -6696,19 +6699,21 @@ var render = function() {
             "v-card-subtitle",
             { staticClass: "py-2" },
             [
-              _c(
-                "v-btn",
-                {
-                  staticClass: "m-0 p-0",
-                  attrs: { text: "" },
-                  on: {
-                    click: function($event) {
-                      return _vm.like(_vm.post.id)
-                    }
-                  }
-                },
-                [_vm._v(_vm._s(_vm.heartCount) + "件のいいね")]
-              )
+              _vm.post.id
+                ? _c(
+                    "v-btn",
+                    {
+                      staticClass: "m-0 p-0",
+                      attrs: { text: "" },
+                      on: {
+                        click: function($event) {
+                          return _vm.like(_vm.post.id)
+                        }
+                      }
+                    },
+                    [_vm._v(_vm._s(_vm.heartCount) + "件のいいね")]
+                  )
+                : _vm._e()
             ],
             1
           ),
@@ -6751,74 +6756,82 @@ var render = function() {
                 1
               ),
               _vm._v(" "),
-              _c(
-                "v-btn",
-                {
-                  directives: [
+              _vm.post.id
+                ? _c(
+                    "v-btn",
                     {
-                      name: "show",
-                      rawName: "v-show",
-                      value: !_vm.hasHeart,
-                      expression: "!hasHeart"
-                    }
-                  ],
-                  staticClass: "mx-md-7 mx-3",
-                  attrs: { icon: "", color: "gley" },
-                  on: {
-                    click: function($event) {
-                      return _vm.favorite(_vm.post.id)
-                    }
-                  }
-                },
-                [_c("v-icon", [_vm._v("mdi-heart")])],
-                1
-              ),
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: !_vm.hasHeart,
+                          expression: "!hasHeart"
+                        }
+                      ],
+                      staticClass: "mx-md-7 mx-3",
+                      attrs: { icon: "", color: "gley" },
+                      on: {
+                        click: function($event) {
+                          return _vm.favorite(_vm.post.id)
+                        }
+                      }
+                    },
+                    [_c("v-icon", [_vm._v("mdi-heart")])],
+                    1
+                  )
+                : _vm._e(),
               _vm._v(" "),
-              _c(
-                "v-btn",
-                {
-                  directives: [
+              _vm.post.id
+                ? _c(
+                    "v-btn",
                     {
-                      name: "show",
-                      rawName: "v-show",
-                      value: _vm.hasHeart,
-                      expression: "hasHeart"
-                    }
-                  ],
-                  staticClass: "mx-md-7 mx-3",
-                  attrs: { icon: "", color: "pink" },
-                  on: {
-                    click: function($event) {
-                      return _vm.unfavorite(_vm.post.id)
-                    }
-                  }
-                },
-                [_c("v-icon", [_vm._v("mdi-heart")])],
-                1
-              ),
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.hasHeart,
+                          expression: "hasHeart"
+                        }
+                      ],
+                      staticClass: "mx-md-7 mx-3",
+                      attrs: { icon: "", color: "pink" },
+                      on: {
+                        click: function($event) {
+                          return _vm.unfavorite(_vm.post.id)
+                        }
+                      }
+                    },
+                    [_c("v-icon", [_vm._v("mdi-heart")])],
+                    1
+                  )
+                : _vm._e(),
               _vm._v(" "),
-              _c(
-                "v-btn",
-                {
-                  directives: [
+              _vm.post.id && _vm.post.user.id
+                ? _c(
+                    "v-btn",
                     {
-                      name: "show",
-                      rawName: "v-show",
-                      value: _vm.post.user.id === _vm.$store.state.auth.userId,
-                      expression: "post.user.id === $store.state.auth.userId"
-                    }
-                  ],
-                  staticClass: "mx-md-7 mx-3",
-                  attrs: { icon: "", color: "gley" },
-                  on: {
-                    click: function($event) {
-                      return _vm.editPost(_vm.post.id)
-                    }
-                  }
-                },
-                [_c("v-icon", [_vm._v("mdi-pencil")])],
-                1
-              )
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value:
+                            _vm.post.user.id === _vm.$store.state.auth.userId,
+                          expression:
+                            "post.user.id === $store.state.auth.userId"
+                        }
+                      ],
+                      staticClass: "mx-md-7 mx-3",
+                      attrs: { icon: "", color: "gley" },
+                      on: {
+                        click: function($event) {
+                          return _vm.editPost(_vm.post.id)
+                        }
+                      }
+                    },
+                    [_c("v-icon", [_vm._v("mdi-pencil")])],
+                    1
+                  )
+                : _vm._e()
             ],
             1
           )

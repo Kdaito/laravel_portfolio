@@ -12,7 +12,7 @@
         <v-card-subtitle class="py-0 pb-2" v-text="post.created_at"></v-card-subtitle>
         <v-divider class="py-0 my-0"></v-divider>
         <v-card-subtitle class="py-2">
-          <v-btn @click="like(post.id)" text class="m-0 p-0">{{heartCount}}件のいいね</v-btn>
+          <v-btn @click="like(post.id)" v-if="post.id" text class="m-0 p-0">{{heartCount}}件のいいね</v-btn>
         </v-card-subtitle>
         <v-divider class="py-0 my-0"></v-divider>
         <v-card-subtitle class="py-2">{{comments.length}}件のコメント</v-card-subtitle>
@@ -25,15 +25,18 @@
             icon 
             color="gley" 
             class="mx-md-7 mx-3"
+            v-if="post.id"
             @click="favorite(post.id)"
           ><v-icon>mdi-heart</v-icon></v-btn>
           <v-btn 
             v-show="hasHeart" 
             icon color="pink" 
             class="mx-md-7 mx-3"
+            v-if="post.id"
             @click="unfavorite(post.id)"
           ><v-icon>mdi-heart</v-icon></v-btn>
           <v-btn 
+            v-if="post.id && post.user.id"
             v-show="post.user.id === $store.state.auth.userId" 
             @click="editPost(post.id)"
             icon 
