@@ -62,7 +62,7 @@ export default {
   },
   methods: {
     createPost(){
-      axios.post('https://hirotolaravelproduct.herokuapp.com/api/posts/', {
+      axios.post('https://hirotolaravelproduct.herokuapp.com/api/posts', {
         user_id: this.$store.state.auth.userId,
         title: this.title,
         text: this.text,
