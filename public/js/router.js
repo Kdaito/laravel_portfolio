@@ -1994,8 +1994,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      email: 'kdaito0620@gmail.com',
-      password: 'password123',
+      email: '',
+      password: '',
       showPassword: false,
       isValid: false,
       errorMessage: this.$store.state.message,
