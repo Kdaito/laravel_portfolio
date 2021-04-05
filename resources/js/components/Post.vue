@@ -69,7 +69,7 @@ export default {
       }).then(res => {
         this.$router.push('/');
       }).catch(err => {
-        console.log('unable to created post')
+        this.showConsoleLog(err)
       })
     }
   }

@@ -20,7 +20,7 @@
                 v-show="user.id !== $store.state.auth.userId && !user.follow"
                 outlined 
                 rounded 
-                @click.stop="follow(user.id); user.follow = true; user.followedUser++"
+                @click.stop="follow(user)"
                 color="info"
               >フォローする</v-btn>
               <v-btn 
@@ -28,7 +28,7 @@
                 v-show="user.id !== $store.state.auth.userId && user.follow"
                 dark
                 rounded 
-                @click.stop="unfollow(user.id); user.follow = false; user.followedUser--"
+                @click.stop="unfollow(user)"
                 color="info"
               >フォロー中</v-btn>
             </div>
@@ -86,7 +86,7 @@ export default {
       this.user.created_at = `${created_at[0]}年${created_at[1]}月${created_at[2]}日`
       this.loading = false
     })
-    .catch(err => console.log(err));
+    .catch(err => this.showConsoleLog(err));
   },
   methods:{
     editProfile(){
@@ -98,19 +98,27 @@ export default {
     like(){
       this.$router.push({path: `/profile/${this.$route.params.id}/likes`})
     },
-    follow(id){
+    follow(user){
       axios.post('/api/follow', {
-        followedUserId: id,
+        followedUserId: user.id,
         followingUserId: this.$store.state.auth.userId
       })
-      .catch(err => console.log(err))
+      .then(res => {
+        user.follow = true
+        user.followedUser++
+      })
+      .catch(err => this.showConsoleLog(err))
     },
-    unfollow(id){
+    unfollow(user){
       axios.post('/api/unfollow', {
-        followedUserId: id,
+        followedUserId: user.id,
         followingUserId: this.$store.state.auth.userId
       })
-      .catch(err => console.log(err))
+      .then(res => {
+        user.follow = false
+        user.followedUser--
+      })
+      .catch(err => this.showConsoleLog(err))
     },
     followingUsers(id){
       this.$router.push({path: `/following/${id}`})

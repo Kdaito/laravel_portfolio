@@ -68,7 +68,7 @@ export default {
       .then(res => {
         this.$router.back()
       })
-      .catch(err => console.log(err))
+      .catch(err => this.showConsoleLog(err))
     }
   }
 }

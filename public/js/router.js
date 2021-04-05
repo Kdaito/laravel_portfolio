@@ -2118,14 +2118,14 @@ __webpack_require__.r(__webpack_exports__);
         email: this.email,
         password: this.password
       }).then(function (res) {
-        console.log(res);
         _this.isError = false;
 
         _this.$router.push({
           path: '/login'
         });
-      })["catch"](function (res) {
-        console.log(res);
+      })["catch"](function (err) {
+        _this.showConsoleLog(err);
+
         _this.isError = true;
       });
     }
@@ -2218,10 +2218,10 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (res) {
         _this.comments = res.data;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this.showConsoleLog(err);
       });
     })["catch"](function (err) {
-      console.log(err);
+      _this.showConsoleLog(err);
     });
   },
   methods: {
@@ -2237,7 +2237,7 @@ __webpack_require__.r(__webpack_exports__);
           path: "/detail/".concat(_this2.$route.params.id)
         });
       })["catch"](function (err) {
-        console.log(err);
+        _this2.showConsoleLog(err);
       });
     },
     back: function back() {
@@ -2374,8 +2374,8 @@ __webpack_require__.r(__webpack_exports__);
 
     axios.get('/api/posts/' + this.$route.params.id).then(function (res) {
       _this.title = res.data.post.title, _this.text = res.data.post.text;
-    })["catch"](function (res) {
-      console.log(res);
+    })["catch"](function (err) {
+      _this.showConsoleLog(err);
     });
   },
   methods: {
@@ -2388,7 +2388,7 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (res) {
         _this2.$router.go(-1);
       })["catch"](function (err) {
-        console.log(err);
+        _this2.showConsoleLog(err);
       });
     },
     back: function back() {
@@ -2400,7 +2400,7 @@ __webpack_require__.r(__webpack_exports__);
       axios["delete"]("/api/posts/".concat(this.$route.params.id)).then(function (res) {
         _this3.$router.go(-1);
       })["catch"](function (err) {
-        console.log(err);
+        _this3.showConsoleLog(err);
       });
     }
   }
@@ -2487,7 +2487,7 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (res) {
         _this.$router.back();
       })["catch"](function (err) {
-        return console.log(err);
+        return _this.showConsoleLog(err);
       });
     }
   }
@@ -2582,27 +2582,35 @@ __webpack_require__.r(__webpack_exports__);
         _this.userExist = false;
       }
     })["catch"](function (err) {
-      return console.log(err);
+      return _this.showConsoleLog(err);
     });
   },
   methods: {
     back: function back() {
       this.$router.go(-1);
     },
-    follow: function follow(id) {
+    follow: function follow(user) {
+      var _this2 = this;
+
       axios.post('/api/follow', {
-        followedUserId: id,
+        followedUserId: user.id,
         followingUserId: this.$store.state.auth.userId
+      }).then(function (res) {
+        user.follow = true;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this2.showConsoleLog(err);
       });
     },
-    unfollow: function unfollow(id) {
+    unfollow: function unfollow(user) {
+      var _this3 = this;
+
       axios.post('/api/unfollow', {
-        followedUserId: id,
+        followedUserId: user.id,
         followingUserId: this.$store.state.auth.userId
+      }).then(function (res) {
+        user.follow = false;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this3.showConsoleLog(err);
       });
     },
     showProfile: function showProfile(id) {
@@ -2691,7 +2699,6 @@ __webpack_require__.r(__webpack_exports__);
       id: this.$route.params.id,
       userId: this.$store.state.auth.userId
     }).then(function (res) {
-      console.log(res);
       _this.users = res.data;
 
       _this.users.forEach(function (user) {
@@ -2703,27 +2710,35 @@ __webpack_require__.r(__webpack_exports__);
         _this.userExist = false;
       }
     })["catch"](function (err) {
-      return console.log(err);
+      return _this.showConsoleLog(err);
     });
   },
   methods: {
     back: function back() {
       this.$router.go(-1);
     },
-    follow: function follow(id) {
+    follow: function follow(user) {
+      var _this2 = this;
+
       axios.post('/api/follow', {
-        followedUserId: id,
+        followedUserId: user.id,
         followingUserId: this.$store.state.auth.userId
+      }).then(function (res) {
+        user.follow = true;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this2.showConsoleLog(err);
       });
     },
-    unfollow: function unfollow(id) {
+    unfollow: function unfollow(user) {
+      var _this3 = this;
+
       axios.post('/api/unfollow', {
-        followedUserId: id,
+        followedUserId: user.id,
         followingUserId: this.$store.state.auth.userId
+      }).then(function (res) {
+        user.follow = false;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this3.showConsoleLog(err);
       });
     },
     showProfile: function showProfile(id) {
@@ -2833,7 +2848,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.start += 10;
         _this.loading = false;
       })["catch"](function (err) {
-        console.log(err);
+        _this.showConsoleLog(err);
       });
     },
     detailPost: function detailPost(id) {
@@ -2851,36 +2866,46 @@ __webpack_require__.r(__webpack_exports__);
         path: "/createComment/".concat(id)
       });
     },
-    favorite: function favorite(id) {
+    favorite: function favorite(post) {
+      var _this2 = this;
+
       axios.post('/api/posts/favorites', {
-        postId: id,
+        postId: post.id,
         userId: this.$store.state.auth.userId
+      }).then(function (res) {
+        post.hasFavorite = true;
+        post.heartCount++;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this2.showConsoleLog(err);
       });
     },
-    unfavorite: function unfavorite(id) {
+    unfavorite: function unfavorite(post) {
+      var _this3 = this;
+
       axios.post('/api/posts/unfavorites', {
-        postId: id,
+        postId: post.id,
         userId: this.$store.state.auth.userId
+      }).then(function (res) {
+        post.hasFavorite = false;
+        post.heartCount--;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this3.showConsoleLog(err);
       });
     },
     morePosts: function morePosts() {
-      var _this2 = this;
+      var _this4 = this;
 
       this.loading = true;
       axios.post('/api/posts/showPosts', {
         userId: this.$store.state.auth.userId,
         start: this.start
       }).then(function (res) {
-        _this2.posts = _this2.posts.concat(res.data.posts);
-        _this2.existMorePosts = res.data.morePosts;
-        _this2.start += 10;
-        _this2.loading = false;
+        _this4.posts = _this4.posts.concat(res.data.posts);
+        _this4.existMorePosts = res.data.morePosts;
+        _this4.start += 10;
+        _this4.loading = false;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this4.showConsoleLog(err);
       });
     }
   }
@@ -2971,7 +2996,7 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (res) {
         _this.$router.push('/');
       })["catch"](function (err) {
-        console.log('unable to created post');
+        _this.showConsoleLog(err);
       });
     }
   }
@@ -3048,13 +3073,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       post: {},
       comments: {},
       heartCount: '',
-      hasHeart: false
+      hasHeart: false,
+      loading: true
     };
   },
   mounted: function mounted() {
@@ -3072,15 +3108,16 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (res) {
         _this.hasHeart = res.data.result;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this.showConsoleLog(err);
       });
       axios.post('/api/showComment', data).then(function (res) {
         _this.comments = res.data;
+        _this.loading = false;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this.showConsoleLog(err);
       });
     })["catch"](function (err) {
-      console.log(err);
+      _this.showConsoleLog(err);
     });
   },
   methods: {
@@ -3118,7 +3155,7 @@ __webpack_require__.r(__webpack_exports__);
         _this3.hasHeart = res.data.result;
         _this3.heartCount = res.data.count;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this3.showConsoleLog(err);
       });
     },
     like: function like(id) {
@@ -3230,7 +3267,7 @@ __webpack_require__.r(__webpack_exports__);
       _this.user.created_at = "".concat(created_at[0], "\u5E74").concat(created_at[1], "\u6708").concat(created_at[2], "\u65E5");
       _this.loading = false;
     })["catch"](function (err) {
-      return console.log(err);
+      return _this.showConsoleLog(err);
     });
   },
   methods: {
@@ -3252,20 +3289,30 @@ __webpack_require__.r(__webpack_exports__);
         path: "/profile/".concat(this.$route.params.id, "/likes")
       });
     },
-    follow: function follow(id) {
+    follow: function follow(user) {
+      var _this2 = this;
+
       axios.post('/api/follow', {
-        followedUserId: id,
+        followedUserId: user.id,
         followingUserId: this.$store.state.auth.userId
+      }).then(function (res) {
+        user.follow = true;
+        user.followedUser++;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this2.showConsoleLog(err);
       });
     },
-    unfollow: function unfollow(id) {
+    unfollow: function unfollow(user) {
+      var _this3 = this;
+
       axios.post('/api/unfollow', {
-        followedUserId: id,
+        followedUserId: user.id,
         followingUserId: this.$store.state.auth.userId
+      }).then(function (res) {
+        user.follow = false;
+        user.followedUser--;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this3.showConsoleLog(err);
       });
     },
     followingUsers: function followingUsers(id) {
@@ -3377,27 +3424,31 @@ __webpack_require__.r(__webpack_exports__);
           user.created_at = "".concat(created[0], "\u5E74").concat(created[1], "\u6708").concat(created[2], "\u65E5");
         });
       })["catch"](function (err) {
-        return console.log(err);
+        return _this.showConsoleLog(err);
       });
     },
-    follow: function follow(id) {
+    follow: function follow(user) {
+      var _this2 = this;
+
       axios.post('/api/follow', {
-        followedUserId: id,
+        followedUserId: user.id,
         followingUserId: this.$store.state.auth.userId
       }).then(function (res) {
-        return console.log(res);
+        user.follow = true;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this2.showConsoleLog(err);
       });
     },
-    unfollow: function unfollow(id) {
+    unfollow: function unfollow(user) {
+      var _this3 = this;
+
       axios.post('/api/unfollow', {
-        followedUserId: id,
+        followedUserId: user.id,
         followingUserId: this.$store.state.auth.userId
       }).then(function (res) {
-        return console.log(res);
+        user.follow = false;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this3.showConsoleLog(err);
       });
     },
     showProfile: function showProfile(id) {
@@ -3497,31 +3548,35 @@ __webpack_require__.r(__webpack_exports__);
         _this.userExist = false;
       }
     })["catch"](function (err) {
-      return console.log(err);
+      return _this.showConsoleLog(err);
     });
   },
   methods: {
     back: function back() {
       this.$router.go(-1);
     },
-    follow: function follow(id) {
+    follow: function follow(user) {
+      var _this2 = this;
+
       axios.post('/api/follow', {
-        followedUserId: id,
+        followedUserId: user.id,
         followingUserId: this.$store.state.auth.userId
       }).then(function (res) {
-        return console.log(res);
+        user.follow = true;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this2.showConsoleLog(err);
       });
     },
-    unfollow: function unfollow(id) {
+    unfollow: function unfollow(user) {
+      var _this3 = this;
+
       axios.post('/api/unfollow', {
-        followedUserId: id,
+        followedUserId: user.id,
         followingUserId: this.$store.state.auth.userId
       }).then(function (res) {
-        return console.log(res);
+        user.follow = false;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this3.showConsoleLog(err);
       });
     },
     showProfile: function showProfile(id) {
@@ -3630,7 +3685,7 @@ __webpack_require__.r(__webpack_exports__);
       _this.start += 10;
       _this.existMorePosts = res.data.morePosts;
     })["catch"](function (err) {
-      return console.log(err);
+      return _this.showConsoleLog(err);
     });
   },
   methods: {
@@ -3649,24 +3704,34 @@ __webpack_require__.r(__webpack_exports__);
         path: "/createComment/".concat(id)
       });
     },
-    favorite: function favorite(id) {
+    favorite: function favorite(post) {
+      var _this2 = this;
+
       axios.post('/api/posts/favorites', {
-        postId: id,
+        postId: post.id,
         userId: this.$store.state.auth.userId
+      }).then(function (res) {
+        post.hasFavorite = true;
+        post.heartCount++;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this2.showConsoleLog(err);
       });
     },
-    unfavorite: function unfavorite(id) {
+    unfavorite: function unfavorite(post) {
+      var _this3 = this;
+
       axios.post('/api/posts/unfavorites', {
-        postId: id,
+        postId: post.id,
         userId: this.$store.state.auth.userId
+      }).then(function (res) {
+        post.hasFavorite = false;
+        post.heartCount--;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this3.showConsoleLog(err);
       });
     },
     morePosts: function morePosts() {
-      var _this2 = this;
+      var _this4 = this;
 
       this.loading = true;
       axios.post('/api/posts/likePosts', {
@@ -3674,12 +3739,12 @@ __webpack_require__.r(__webpack_exports__);
         userId: this.$store.state.auth.userId,
         start: this.start
       }).then(function (res) {
-        _this2.posts = _this2.posts.concat(res.data.posts);
-        _this2.start += 10;
-        _this2.existMorePosts = res.data.morePosts;
-        _this2.loading = false;
+        _this4.posts = _this4.posts.concat(res.data.posts);
+        _this4.start += 10;
+        _this4.existMorePosts = res.data.morePosts;
+        _this4.loading = false;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this4.showConsoleLog(err);
       });
     }
   }
@@ -3783,7 +3848,7 @@ __webpack_require__.r(__webpack_exports__);
       _this.start += 10;
       _this.existMorePosts = res.data.morePosts;
     })["catch"](function (err) {
-      return console.log(err);
+      return _this.showConsoleLog(err);
     });
   },
   methods: {
@@ -3802,24 +3867,34 @@ __webpack_require__.r(__webpack_exports__);
         path: "/createComment/".concat(id)
       });
     },
-    favorite: function favorite(id) {
+    favorite: function favorite(post) {
+      var _this2 = this;
+
       axios.post('/api/posts/favorites', {
-        postId: id,
+        postId: post.id,
         userId: this.$store.state.auth.userId
+      }).then(function (res) {
+        post.hasFavorite = true;
+        post.heartCount++;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this2.showConsoleLog(err);
       });
     },
-    unfavorite: function unfavorite(id) {
+    unfavorite: function unfavorite(post) {
+      var _this3 = this;
+
       axios.post('/api/posts/unfavorites', {
-        postId: id,
+        postId: post.id,
         userId: this.$store.state.auth.userId
+      }).then(function (res) {
+        post.hasFavorite = false;
+        post.heartCount--;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this3.showConsoleLog(err);
       });
     },
     morePosts: function morePosts() {
-      var _this2 = this;
+      var _this4 = this;
 
       this.loading = true;
       axios.post('/api/posts/likePosts', {
@@ -3827,13 +3902,12 @@ __webpack_require__.r(__webpack_exports__);
         userId: this.$store.state.auth.userId,
         start: this.start
       }).then(function (res) {
-        console.log(res.data);
-        _this2.posts = _this2.posts.concat(res.data.posts);
-        _this2.start += 10;
-        _this2.existMorePosts = res.data.morePosts;
-        _this2.loading = false;
+        _this4.posts = _this4.posts.concat(res.data.posts);
+        _this4.start += 10;
+        _this4.existMorePosts = res.data.morePosts;
+        _this4.loading = false;
       })["catch"](function (err) {
-        return console.log(err);
+        return _this4.showConsoleLog(err);
       });
     }
   }
@@ -6004,8 +6078,7 @@ var render = function() {
                             on: {
                               click: function($event) {
                                 $event.stopPropagation()
-                                _vm.follow(user.id)
-                                user.follow = true
+                                return _vm.follow(user)
                               }
                             }
                           },
@@ -6031,8 +6104,7 @@ var render = function() {
                             on: {
                               click: function($event) {
                                 $event.stopPropagation()
-                                _vm.unfollow(user.id)
-                                user.follow = false
+                                return _vm.unfollow(user)
                               }
                             }
                           },
@@ -6224,8 +6296,7 @@ var render = function() {
                             on: {
                               click: function($event) {
                                 $event.stopPropagation()
-                                _vm.follow(user.id)
-                                user.follow = true
+                                return _vm.follow(user)
                               }
                             }
                           },
@@ -6251,8 +6322,7 @@ var render = function() {
                             on: {
                               click: function($event) {
                                 $event.stopPropagation()
-                                _vm.unfollow(user.id)
-                                user.follow = false
+                                return _vm.unfollow(user)
                               }
                             }
                           },
@@ -6401,9 +6471,7 @@ var render = function() {
                         attrs: { icon: "", color: "gley" },
                         on: {
                           click: function($event) {
-                            _vm.favorite(post.id)
-                            post.hasFavorite = true
-                            post.heartCount++
+                            return _vm.favorite(post)
                           }
                         }
                       },
@@ -6429,9 +6497,7 @@ var render = function() {
                         attrs: { icon: "", color: "pink" },
                         on: {
                           click: function($event) {
-                            _vm.unfavorite(post.id)
-                            post.hasFavorite = false
-                            post.heartCount--
+                            return _vm.unfavorite(post)
                           }
                         }
                       },
@@ -6664,209 +6730,227 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c(
-        "v-card",
-        {
-          staticClass: "mx-auto",
-          attrs: { outlined: "", tile: "", "max-width": "500px" }
-        },
-        [
-          _c("v-card-title", {
-            staticClass: "text-5",
-            domProps: { textContent: _vm._s(_vm.post.title) }
-          }),
-          _vm._v(" "),
-          _vm.post.user
-            ? _c("v-card-subtitle", {
-                domProps: { textContent: _vm._s(_vm.post.user.name) }
-              })
-            : _vm._e(),
-          _vm._v(" "),
-          _c("v-card-text", {
-            staticClass: "text-h6",
-            domProps: { textContent: _vm._s(_vm.post.text) }
-          }),
-          _vm._v(" "),
-          _c("v-card-subtitle", {
-            staticClass: "py-0 pb-2",
-            domProps: { textContent: _vm._s(_vm.post.created_at) }
-          }),
-          _vm._v(" "),
-          _c("v-divider", { staticClass: "py-0 my-0" }),
-          _vm._v(" "),
-          _c(
-            "v-card-subtitle",
-            { staticClass: "py-2" },
-            [
-              _vm.post.id
-                ? _c(
-                    "v-btn",
-                    {
-                      staticClass: "m-0 p-0",
-                      attrs: { text: "" },
-                      on: {
-                        click: function($event) {
-                          return _vm.like(_vm.post.id)
-                        }
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.heartCount) + "件のいいね")]
-                  )
-                : _vm._e()
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c("v-divider", { staticClass: "py-0 my-0" }),
-          _vm._v(" "),
-          _c("v-card-subtitle", { staticClass: "py-2" }, [
-            _vm._v(_vm._s(_vm.comments.length) + "件のコメント")
-          ]),
-          _vm._v(" "),
-          _c("v-divider", { staticClass: "py-0 my-0" }),
-          _vm._v(" "),
-          _c(
-            "v-card-actions",
-            { staticClass: "d-flex align-center justify-center pb-6" },
-            [
-              _c(
-                "v-btn",
-                {
-                  staticClass: "mx-md-7 mx-3",
-                  attrs: { icon: "", color: "gley" },
-                  on: { click: _vm.back }
-                },
-                [_c("v-icon", [_vm._v("mdi-arrow-left")])],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "v-btn",
-                {
-                  staticClass: "mx-md-7 mx-3",
-                  attrs: { icon: "", color: "gley" },
-                  on: {
-                    click: function($event) {
-                      return _vm.createComment(_vm.post.id)
-                    }
-                  }
-                },
-                [_c("v-icon", [_vm._v("mdi-message-reply")])],
-                1
-              ),
-              _vm._v(" "),
-              _vm.post.id
-                ? _c(
-                    "v-btn",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: !_vm.hasHeart,
-                          expression: "!hasHeart"
-                        }
-                      ],
-                      staticClass: "mx-md-7 mx-3",
-                      attrs: { icon: "", color: "gley" },
-                      on: {
-                        click: function($event) {
-                          return _vm.favorite(_vm.post.id)
-                        }
-                      }
-                    },
-                    [_c("v-icon", [_vm._v("mdi-heart")])],
-                    1
-                  )
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.post.id
-                ? _c(
-                    "v-btn",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.hasHeart,
-                          expression: "hasHeart"
-                        }
-                      ],
-                      staticClass: "mx-md-7 mx-3",
-                      attrs: { icon: "", color: "pink" },
-                      on: {
-                        click: function($event) {
-                          return _vm.unfavorite(_vm.post.id)
-                        }
-                      }
-                    },
-                    [_c("v-icon", [_vm._v("mdi-heart")])],
-                    1
-                  )
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.post.id && _vm.post.user.id
-                ? _c(
-                    "v-btn",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value:
-                            _vm.post.user.id === _vm.$store.state.auth.userId,
-                          expression:
-                            "post.user.id === $store.state.auth.userId"
-                        }
-                      ],
-                      staticClass: "mx-md-7 mx-3",
-                      attrs: { icon: "", color: "gley" },
-                      on: {
-                        click: function($event) {
-                          return _vm.editPost(_vm.post.id)
-                        }
-                      }
-                    },
-                    [_c("v-icon", [_vm._v("mdi-pencil")])],
-                    1
-                  )
-                : _vm._e()
-            ],
-            1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _vm._l(_vm.comments, function(comment) {
-        return _c(
-          "v-card",
-          { key: comment.index, attrs: { outlined: "", tile: "" } },
+  return _c("div", [
+    !_vm.loading
+      ? _c(
+          "div",
           [
-            _c("v-card-title", {
-              staticClass: "text-5 pb-0",
-              domProps: { textContent: _vm._s(comment.user.name) }
-            }),
+            _c(
+              "v-card",
+              {
+                staticClass: "mx-auto",
+                attrs: { outlined: "", tile: "", "max-width": "500px" }
+              },
+              [
+                _c("v-card-title", {
+                  staticClass: "text-5",
+                  domProps: { textContent: _vm._s(_vm.post.title) }
+                }),
+                _vm._v(" "),
+                _vm.post.user
+                  ? _c("v-card-subtitle", {
+                      domProps: { textContent: _vm._s(_vm.post.user.name) }
+                    })
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("v-card-text", {
+                  staticClass: "text-h6",
+                  domProps: { textContent: _vm._s(_vm.post.text) }
+                }),
+                _vm._v(" "),
+                _c("v-card-subtitle", {
+                  staticClass: "py-0 pb-2",
+                  domProps: { textContent: _vm._s(_vm.post.created_at) }
+                }),
+                _vm._v(" "),
+                _c("v-divider", { staticClass: "py-0 my-0" }),
+                _vm._v(" "),
+                _c(
+                  "v-card-subtitle",
+                  { staticClass: "py-2" },
+                  [
+                    _vm.post.id
+                      ? _c(
+                          "v-btn",
+                          {
+                            staticClass: "m-0 p-0",
+                            attrs: { text: "" },
+                            on: {
+                              click: function($event) {
+                                return _vm.like(_vm.post.id)
+                              }
+                            }
+                          },
+                          [_vm._v(_vm._s(_vm.heartCount) + "件のいいね")]
+                        )
+                      : _vm._e()
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("v-divider", { staticClass: "py-0 my-0" }),
+                _vm._v(" "),
+                _c("v-card-subtitle", { staticClass: "py-2" }, [
+                  _vm._v(_vm._s(_vm.comments.length) + "件のコメント")
+                ]),
+                _vm._v(" "),
+                _c("v-divider", { staticClass: "py-0 my-0" }),
+                _vm._v(" "),
+                _c(
+                  "v-card-actions",
+                  { staticClass: "d-flex align-center justify-center pb-6" },
+                  [
+                    _c(
+                      "v-btn",
+                      {
+                        staticClass: "mx-md-7 mx-3",
+                        attrs: { icon: "", color: "gley" },
+                        on: { click: _vm.back }
+                      },
+                      [_c("v-icon", [_vm._v("mdi-arrow-left")])],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "v-btn",
+                      {
+                        staticClass: "mx-md-7 mx-3",
+                        attrs: { icon: "", color: "gley" },
+                        on: {
+                          click: function($event) {
+                            return _vm.createComment(_vm.post.id)
+                          }
+                        }
+                      },
+                      [_c("v-icon", [_vm._v("mdi-message-reply")])],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _vm.post.id
+                      ? _c(
+                          "v-btn",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: !_vm.hasHeart,
+                                expression: "!hasHeart"
+                              }
+                            ],
+                            staticClass: "mx-md-7 mx-3",
+                            attrs: { icon: "", color: "gley" },
+                            on: {
+                              click: function($event) {
+                                return _vm.favorite(_vm.post.id)
+                              }
+                            }
+                          },
+                          [_c("v-icon", [_vm._v("mdi-heart")])],
+                          1
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.post.id
+                      ? _c(
+                          "v-btn",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: _vm.hasHeart,
+                                expression: "hasHeart"
+                              }
+                            ],
+                            staticClass: "mx-md-7 mx-3",
+                            attrs: { icon: "", color: "pink" },
+                            on: {
+                              click: function($event) {
+                                return _vm.unfavorite(_vm.post.id)
+                              }
+                            }
+                          },
+                          [_c("v-icon", [_vm._v("mdi-heart")])],
+                          1
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.post.id && _vm.post.user.id
+                      ? _c(
+                          "v-btn",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value:
+                                  _vm.post.user.id ===
+                                  _vm.$store.state.auth.userId,
+                                expression:
+                                  "post.user.id === $store.state.auth.userId"
+                              }
+                            ],
+                            staticClass: "mx-md-7 mx-3",
+                            attrs: { icon: "", color: "gley" },
+                            on: {
+                              click: function($event) {
+                                return _vm.editPost(_vm.post.id)
+                              }
+                            }
+                          },
+                          [_c("v-icon", [_vm._v("mdi-pencil")])],
+                          1
+                        )
+                      : _vm._e()
+                  ],
+                  1
+                )
+              ],
+              1
+            ),
             _vm._v(" "),
-            _c("v-card-text", {
-              staticClass: "text-h6",
-              domProps: { textContent: _vm._s(comment.text) }
-            }),
-            _vm._v(" "),
-            _c("v-card-subtitle", {
-              staticClass: "py-0 pb-2",
-              domProps: { textContent: _vm._s(comment.created_at) }
+            _vm._l(_vm.comments, function(comment) {
+              return _c(
+                "v-card",
+                { key: comment.index, attrs: { outlined: "", tile: "" } },
+                [
+                  _c("v-card-title", {
+                    staticClass: "text-5 pb-0",
+                    domProps: { textContent: _vm._s(comment.user.name) }
+                  }),
+                  _vm._v(" "),
+                  _c("v-card-text", {
+                    staticClass: "text-h6",
+                    domProps: { textContent: _vm._s(comment.text) }
+                  }),
+                  _vm._v(" "),
+                  _c("v-card-subtitle", {
+                    staticClass: "py-0 pb-2",
+                    domProps: { textContent: _vm._s(comment.created_at) }
+                  })
+                ],
+                1
+              )
+            })
+          ],
+          2
+        )
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.loading
+      ? _c(
+          "div",
+          { staticClass: "d-flex justify-center align-center" },
+          [
+            _c("v-progress-circular", {
+              attrs: { size: 70, width: 7, color: "info", indeterminate: "" }
             })
           ],
           1
         )
-      })
-    ],
-    2
-  )
+      : _vm._e()
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -6962,9 +7046,7 @@ var render = function() {
                             on: {
                               click: function($event) {
                                 $event.stopPropagation()
-                                _vm.follow(_vm.user.id)
-                                _vm.user.follow = true
-                                _vm.user.followedUser++
+                                return _vm.follow(_vm.user)
                               }
                             }
                           },
@@ -6991,9 +7073,7 @@ var render = function() {
                             on: {
                               click: function($event) {
                                 $event.stopPropagation()
-                                _vm.unfollow(_vm.user.id)
-                                _vm.user.follow = false
-                                _vm.user.followedUser--
+                                return _vm.unfollow(_vm.user)
                               }
                             }
                           },
@@ -7242,8 +7322,7 @@ var render = function() {
                         on: {
                           click: function($event) {
                             $event.stopPropagation()
-                            _vm.follow(user.id)
-                            user.follow = true
+                            return _vm.follow(user)
                           }
                         }
                       },
@@ -7269,8 +7348,7 @@ var render = function() {
                         on: {
                           click: function($event) {
                             $event.stopPropagation()
-                            _vm.unfollow(user.id)
-                            user.follow = false
+                            return _vm.unfollow(user)
                           }
                         }
                       },
@@ -7459,8 +7537,7 @@ var render = function() {
                             on: {
                               click: function($event) {
                                 $event.stopPropagation()
-                                _vm.follow(user.id)
-                                user.follow = true
+                                return _vm.follow(user)
                               }
                             }
                           },
@@ -7634,9 +7711,7 @@ var render = function() {
                       attrs: { icon: "", color: "gley" },
                       on: {
                         click: function($event) {
-                          _vm.favorite(post.id)
-                          post.hasFavorite = true
-                          post.heartCount++
+                          return _vm.favorite(post)
                         }
                       }
                     },
@@ -7662,9 +7737,7 @@ var render = function() {
                       attrs: { icon: "", color: "pink" },
                       on: {
                         click: function($event) {
-                          _vm.unfavorite(post.id)
-                          post.hasFavorite = false
-                          post.heartCount--
+                          return _vm.unfavorite(post)
                         }
                       }
                     },
@@ -7850,9 +7923,7 @@ var render = function() {
                       attrs: { icon: "", color: "gley" },
                       on: {
                         click: function($event) {
-                          _vm.favorite(post.id)
-                          post.hasFavorite = true
-                          post.heartCount++
+                          return _vm.favorite(post)
                         }
                       }
                     },
@@ -7878,9 +7949,7 @@ var render = function() {
                       attrs: { icon: "", color: "pink" },
                       on: {
                         click: function($event) {
-                          _vm.unfavorite(post.id)
-                          post.hasFavorite = false
-                          post.heartCount--
+                          return _vm.unfavorite(post)
                         }
                       }
                     },

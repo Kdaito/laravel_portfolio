@@ -115,8 +115,8 @@ export default {
       this.title = res.data.post.title,
       this.text = res.data.post.text
     })
-    .catch(res => {
-      console.log(res)
+    .catch(err => {
+      this.showConsoleLog(err)
     })
   },
   methods: {
@@ -129,7 +129,7 @@ export default {
         this.$router.go(-1)
       })
       .catch(err => {
-        console.log(err)
+        this.showConsoleLog(err)
       })
     },
     back(){
@@ -141,7 +141,7 @@ export default {
           this.$router.go(-1)
         })
         .catch(err => {
-          console.log(err)
+          this.showConsoleLog(err)
         })
       
     }

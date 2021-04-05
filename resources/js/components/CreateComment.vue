@@ -73,10 +73,10 @@ export default {
       .then(res => {
         this.comments = res.data
       })
-      .catch(err => console.log(err))
+      .catch(err => this.showConsoleLog(err))
     })
     .catch(err => {
-      console.log(err)
+      this.showConsoleLog(err)
     })
   },
   methods: {
@@ -90,7 +90,7 @@ export default {
         this.$router.push({path: `/detail/${this.$route.params.id}`})
       })
       .catch(err => {
-        console.log(err)
+        this.showConsoleLog(err)
       })
     },
     back(){

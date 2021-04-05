@@ -20,14 +20,14 @@
             icon 
             color="gley" 
             class="mx-md-7 mx-3" 
-            @click="favorite(post.id); post.hasFavorite = true; post.heartCount++" 
+            @click="favorite(post)" 
             v-show="!post.hasFavorite"
           ><v-icon>mdi-heart</v-icon>{{post.heartCount}}</v-btn>
           <v-btn 
             icon 
             color="pink" 
             class="mx-md-7 mx-3" 
-            @click="unfavorite(post.id); post.hasFavorite = false; post.heartCount--" 
+            @click="unfavorite(post)" 
             v-show="post.hasFavorite"
           ><v-icon>mdi-heart</v-icon>{{post.heartCount}}</v-btn>
           <v-btn 
@@ -85,7 +85,7 @@ export default {
       this.start += 10
       this.existMorePosts = res.data.morePosts
     })
-    .catch(err => console.log(err))
+    .catch(err => this.showConsoleLog(err))
   },
   methods:{
     detailPost(id) {
@@ -97,19 +97,27 @@ export default {
     createComment(id) {
       this.$router.push({path: `/createComment/${id}`})
     },
-    favorite(id) {
+    favorite(post) {
       axios.post('/api/posts/favorites', {
-        postId: id,
+        postId: post.id,
         userId: this.$store.state.auth.userId,
       })
-      .catch(err => console.log(err));
+      .then(res=> {
+        post.hasFavorite = true
+        post.heartCount++
+      })
+      .catch(err => this.showConsoleLog(err));
     },
-    unfavorite(id) {
+    unfavorite(post) {
       axios.post('/api/posts/unfavorites', {
-        postId: id,
+        postId: post.id,
         userId: this.$store.state.auth.userId,
       })
-      .catch(err => console.log(err))
+      .then(res => {
+        post.hasFavorite = false
+        post.heartCount--
+      })
+      .catch(err => this.showConsoleLog(err))
     },
     morePosts(){
       this.loading = true
@@ -124,7 +132,7 @@ export default {
         this.existMorePosts = res.data.morePosts
         this.loading = false
       })
-      .catch(err => console.log(err))
+      .catch(err => this.showConsoleLog(err))
     }
   }
 }

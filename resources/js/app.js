@@ -7,14 +7,16 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import router from './router'
 import store from './store/index';
+import gc from './mixins/console';
 
 Vue.use(Vuetify)
+Vue.mixin(gc);
 
 
 
 require('./bootstrap');
 
-window.Vue = require('vue');
+// window.Vue = require('vue');
 
 /**
  * The following block of code may be used to automatically register your

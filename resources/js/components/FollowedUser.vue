@@ -26,7 +26,7 @@
               v-show="user.id !== $store.state.auth.userId && !user.follow"
               outlined 
               rounded 
-              @click.stop="follow(user.id); user.follow = true"
+              @click.stop="follow(user)"
               color="info"
             >フォローする</v-btn>
             <v-btn 
@@ -34,7 +34,7 @@
               v-show="user.id !== $store.state.auth.userId && user.follow"
               dark
               rounded 
-              @click.stop="unfollow(user.id); user.follow = false"
+              @click.stop="unfollow(user)"
               color="info"
             >フォロー中</v-btn>
           </div>
@@ -74,25 +74,31 @@ export default {
         this.userExist = false
       }
     })
-    .catch(err => console.log(err))
+    .catch(err => this.showConsoleLog(err))
   },
   methods:{
     back() {
       this.$router.go(-1)
     },
-    follow(id){
+    follow(user){
       axios.post('/api/follow', {
-        followedUserId: id,
+        followedUserId: user.id,
         followingUserId: this.$store.state.auth.userId
       })
-      .catch(err => console.log(err))
+      .then(res => {
+        user.follow = true
+      })
+      .catch(err => this.showConsoleLog(err))
     },
-    unfollow(id){
+    unfollow(user){
       axios.post('/api/unfollow', {
-        followedUserId: id,
+        followedUserId: user.id,
         followingUserId: this.$store.state.auth.userId
       })
-      .catch(err => console.log(err))
+      .then(res => {
+        user.follow = false
+      })
+      .catch(err => this.showConsoleLog(err))
     },
     showProfile(id){
       this.$router.push({path: `/profile/${id}`})

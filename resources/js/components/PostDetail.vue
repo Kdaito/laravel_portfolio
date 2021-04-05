@@ -1,6 +1,7 @@
 <template>
   <div>
-    <v-card
+    <div v-if="!loading">
+      <v-card
         outlined
         tile
         max-width="500px"
@@ -55,6 +56,15 @@
         <v-card-text class="text-h6" v-text="comment.text"></v-card-text>
         <v-card-subtitle class="py-0 pb-2" v-text="comment.created_at"></v-card-subtitle>
       </v-card>
+    </div>
+    <div class="d-flex justify-center align-center" v-if="loading">
+      <v-progress-circular
+        :size="70"
+        :width="7"
+        color="info"
+        indeterminate
+      ></v-progress-circular>
+    </div>
   </div>
 </template>
 
@@ -65,7 +75,8 @@ export default {
       post: {},
       comments: {},
       heartCount: '',
-      hasHeart: false
+      hasHeart: false,
+      loading: true
     }
   },
   mounted() {
@@ -83,15 +94,17 @@ export default {
       .then(res => {
         this.hasHeart = res.data.result
       })
-      .catch(err => console.log(err))
+      .catch(err => this.showConsoleLog(err))
+
       axios.post('/api/showComment', data)
       .then(res => {
         this.comments = res.data
+        this.loading = false
       })
-      .catch(err => console.log(err))
+      .catch(err => this.showConsoleLog(err))
     })
     .catch(err => {
-      console.log(err)
+      this.showConsoleLog(err)
     })
 
   },
@@ -124,7 +137,7 @@ export default {
         this.hasHeart = res.data.result
         this.heartCount = res.data.count
       })
-      .catch(err =>console.log(err))
+      .catch(err =>this.showConsoleLog(err))
     },
     like(id){
       this.$router.push({path: `/showLikeUsers/${id}`})

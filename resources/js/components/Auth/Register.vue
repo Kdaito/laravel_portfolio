@@ -81,11 +81,10 @@ export default {
         email: this.email,
         password: this.password
       }).then(res => {
-        console.log(res)
         this.isError = false
         this.$router.push({path: '/login'});
-      }).catch(res => {
-        console.log(res)
+      }).catch(err => {
+        this.showConsoleLog(err)
         this.isError = true
       })
     }
