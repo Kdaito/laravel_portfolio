@@ -14,8 +14,12 @@
         <v-card-text class="text-h6" v-text="post.text"></v-card-text>
         <v-card-subtitle class="py-0" v-text="post.created_at"></v-card-subtitle>
         <v-card-actions class="d-flex align-center justify-center pb-6">
-          <v-btn icon color="gley" class="mx-md-7 mx-3" @click="detailPost(post.id)"><v-icon>mdi-clipboard-text</v-icon></v-btn>
-          <v-btn icon color="gley" class="mx-md-7 mx-3" @click="createComment(post.id)"><v-icon>mdi-message-reply</v-icon></v-btn>
+          <router-link :to="`/detail/${post.id}`" tag="p" class="mt-4">
+            <v-btn icon color="gley" class="mx-md-7 mx-3"><v-icon>mdi-clipboard-text</v-icon></v-btn>
+          </router-link>
+          <router-link :to="`/createComment/${post.id}`" tag="p" class="mt-4">
+            <v-btn icon color="gley" class="mx-md-7 mx-3"><v-icon>mdi-message-reply</v-icon></v-btn>
+          </router-link>
           <v-btn 
             icon 
             color="gley" 
@@ -30,13 +34,15 @@
             @click="unfavorite(post)" 
             v-show="post.hasFavorite"
           ><v-icon>mdi-heart</v-icon>{{post.heartCount}}</v-btn>
-          <v-btn 
-            v-show="post.user.id === $store.state.auth.userId" 
-            @click="editPost(post.id)"
-            icon 
-            color="gley" 
-            class="mx-md-7 mx-3"
-          ><v-icon>mdi-pencil</v-icon></v-btn>
+          <div v-show="post.user.id === $store.state.auth.userId">
+            <router-link :to="`/edit/${post.id}`" tag="p" class="mt-4">
+              <v-btn 
+                icon 
+                color="gley" 
+                class="mx-md-7 mx-3"
+              ><v-icon>mdi-pencil</v-icon></v-btn>
+            </router-link>
+          </div>
         </v-card-actions>
       </v-card>
       <div class="d-flex justify-center align-center py-8">
@@ -45,12 +51,12 @@
           elevation="6"
           rounded
           x-large
-          v-if="!loading && existMorePosts"
+          v-show="!loading && existMorePosts"
           @click="morePosts"
         >もっと見る</v-btn>
       </div>
     </v-container>
-    <div class="d-flex justify-center align-center" v-if="loading">
+    <div class="d-flex justify-center align-center" v-show="loading">
       <v-progress-circular
         :size="70"
         :width="7"
@@ -90,36 +96,11 @@ export default {
         this.showConsoleLog(err)
       })
     },
-    detailPost(id) {
-      this.$router.push({path: `/detail/${id}`})
-    },
-    editPost(id) {
-      this.$router.push({path: `/edit/${id}`})
-    },
-    createComment(id) {
-      this.$router.push({path: `/createComment/${id}`})
-    },
     favorite(post) {
-      axios.post('/api/posts/favorites', {
-        postId: post.id,
-        userId: this.$store.state.auth.userId,
-      })
-      .then(res => {
-        post.hasFavorite = true
-        post.heartCount++
-      })
-      .catch(err => this.showConsoleLog(err));
+      post = this.mFavorite(post)
     },
     unfavorite(post) {
-      axios.post('/api/posts/unfavorites', {
-        postId: post.id,
-        userId: this.$store.state.auth.userId,
-      })
-      .then(res => {
-        post.hasFavorite = false
-        post.heartCount--
-      })
-      .catch(err => this.showConsoleLog(err))
+      post = this.mUnfavorite(post)
     },
     morePosts(){
       this.loading = true

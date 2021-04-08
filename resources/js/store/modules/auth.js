@@ -51,19 +51,16 @@ const actions = {
       // router.push({path:'/'});
       commit('alert/setAlert', {'message':''},{root: true});
     }).catch(error => {
-      console.log(error)
       commit('alert/setAlert', {'message':'ログインに失敗しました','type':'danger'},{root: true});
     });
   },
   logout({commit}) {
     axios.get('/api/logout').then(res => {
-      console.log('success')
       axios.defaults.headers.common['Authorization'] = '';
       commit('logout');
       router.push({path: '/login'});
       commit('alert/setAlert', {'message': 'ログアウトしました'}, {root: true});
     }).catch(error => {
-      console.log(error)
       commit('alert/setAlert', {'message': 'ログアウトに失敗しました'}, {root: true});
     });
   }

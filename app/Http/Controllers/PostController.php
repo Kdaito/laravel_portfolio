@@ -51,6 +51,21 @@ class PostController extends Controller
         ]);
     }
 
+    public function detailPost(Request $request)
+    {
+        $post = Post::with('user')->find($request->postId);
+
+        $post->heartCount = $post->users()->count();
+
+        if($post->users()->where('user_id', $request->userId)->exists()){
+            $post->hasFavorite = true;
+        } else {
+            $post->hasFavorite = false;
+        }
+
+        return $post;
+    }
+
     public function userPosts(Request $request)
     {
         $id = $request->id;

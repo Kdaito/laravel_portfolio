@@ -36,16 +36,20 @@
           <v-card-text class="pb-5">{{user.text}}</v-card-text>
               <v-card-subtitle class="pt-0">{{user.created_at}}から利用しています</v-card-subtitle>
           <v-divider class="py-0 my-0"></v-divider>
-          <v-card-subtitle class="py-2">
-            <v-btn text class="m-0 p-0" @click="followingUsers(user.id)">フォロー中: {{user.followingUser}}</v-btn>
-            <v-btn text class="m-0 p-0" @click="followedUsers(user.id)">フォロワー: {{user.followedUser}}</v-btn>
+          <v-card-subtitle class="py-2 d-flex align-center mb-0">
+            <router-link :to="`/following/${user.id}`" tag="p" class="m-0 p-0 mr-3">
+              <v-btn text class="m-0 p-0">フォロー中: {{user.followingUser}}</v-btn>
+            </router-link>
+            <router-link :to="`/followed/${user.id}`" tag="p" class="m-0 p-0">
+              <v-btn text class="m-0 p-0" >フォロワー: {{user.followedUser}}</v-btn>
+            </router-link>
           </v-card-subtitle>
       </v-card>
 
       <v-card outlined max-width="500px" class="mx-auto" tile>
         <v-tabs fixed-tabs>
-          <v-tab @click="post">投稿</v-tab>
-          <v-tab @click="like">いいね</v-tab>
+          <v-tab :to="{path: `/profile/${this.$route.params.id}/`}">投稿</v-tab>
+          <v-tab :to="{path: `/profile/${this.$route.params.id}/likes`}">いいね</v-tab>
         </v-tabs>
       </v-card>
       <router-view></router-view>
@@ -81,9 +85,7 @@ export default {
     })
     .then(res => {
       this.user = res.data
-      this.user.created_at = this.user.created_at.split(' ')[0]
-      const created_at = this.user.created_at.split('-')
-      this.user.created_at = `${created_at[0]}年${created_at[1]}月${created_at[2]}日`
+      this.user.created_at = this.convertCreatedAt(this.user.created_at)
       this.loading = false
     })
     .catch(err => this.showConsoleLog(err));
@@ -92,40 +94,12 @@ export default {
     editProfile(){
       this.$router.push({name: 'edit-profile', params: {user: this.user}})
     },
-    post(){
-      this.$router.push({path: `/profile/${this.$route.params.id}/`})
-    },
-    like(){
-      this.$router.push({path: `/profile/${this.$route.params.id}/likes`})
-    },
     follow(user){
-      axios.post('/api/follow', {
-        followedUserId: user.id,
-        followingUserId: this.$store.state.auth.userId
-      })
-      .then(res => {
-        user.follow = true
-        user.followedUser++
-      })
-      .catch(err => this.showConsoleLog(err))
+      user = this.mFollow(user)
     },
     unfollow(user){
-      axios.post('/api/unfollow', {
-        followedUserId: user.id,
-        followingUserId: this.$store.state.auth.userId
-      })
-      .then(res => {
-        user.follow = false
-        user.followedUser--
-      })
-      .catch(err => this.showConsoleLog(err))
+      user = this.mUnfollow(user)
     },
-    followingUsers(id){
-      this.$router.push({path: `/following/${id}`})
-    },
-    followedUsers(id){
-      this.$router.push({path: `/followed/${id}`})
-    }
   },
 }
 </script>

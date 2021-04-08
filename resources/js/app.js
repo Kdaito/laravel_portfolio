@@ -6,11 +6,15 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import router from './router'
-import store from './store/index';
-import gc from './mixins/console';
+import store from './store/index'
+import gc from './mixins/console'
+import gp from './mixins/post'
+import gf from './mixins/follow'
 
 Vue.use(Vuetify)
 Vue.mixin(gc);
+Vue.mixin(gp);
+Vue.mixin(gf);
 
 
 

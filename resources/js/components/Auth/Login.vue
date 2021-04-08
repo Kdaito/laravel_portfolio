@@ -38,8 +38,8 @@
 export default {
     data () {
         return {
-            email: '',
-            password: '',
+            email: 'kdaito0620@gmail.com',
+            password: 'password123',
             showPassword: false,
             isValid: false,
             errorMessage: this.$store.state.message,

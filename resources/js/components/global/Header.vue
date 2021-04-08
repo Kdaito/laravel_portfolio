@@ -26,53 +26,62 @@
       width="25%"
     >
       <v-list nav>
-          <v-list-item-group 
+        <v-list-item-group 
           active-class="primary--text text--accent-4"
           class="py-6 px-4"
         >
-          <v-list-item 
-            v-for="navItem in navItems" 
-            :key="navItem.title" 
-            @click="changePage(navItem.link)"
-            class="pl-10"
-            v-show="$store.getters['auth/isLogin'] === true"
-          >
-            <v-list-item-icon>
-              <v-icon>{{navItem.icon}}</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>{{navItem.title}}</v-list-item-title>
-          </v-list-item>
-          <v-list-item
-            @click="profile"
-            class="pl-10"
-            v-show="$store.getters['auth/isLogin'] === true"
-          >
-            <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>PROFILE</v-list-item-title>
-          </v-list-item>
-          <v-list-item
-            @click.stop="dialog = true"
-            class="pl-10"
-            v-show="$store.getters['auth/isLogin'] === true"
-          >
-            <v-list-item-icon>
-              <v-icon>mdi-brightness-2</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>LOGOUT</v-list-item-title>
-          </v-list-item>
-          <v-list-item 
-            v-for="guestNavItem in guestNavItems" 
-            :key="guestNavItem.index" 
-            @click="changePage(guestNavItem.link)"
-            v-show="$store.getters['auth/isLogin'] === false"
-          >
-            <v-list-item-icon>
-              <v-icon>{{guestNavItem.icon}}</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>{{guestNavItem.title}}</v-list-item-title>
-          </v-list-item>
+          <div v-show="$store.getters['auth/isLogin'] === true">
+            <div
+              v-for="navItem in navItems" 
+              :key="navItem.title"
+            >
+              <router-link :to="navItem.link" tag="p">
+                <v-list-item 
+                  class="pl-10"
+                >
+                  <v-list-item-icon>
+                    <v-icon>{{navItem.icon}}</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-title>{{navItem.title}}</v-list-item-title>
+                </v-list-item>
+              </router-link>
+            </div>
+            <router-link :to="`/profile/${$store.state.auth.userId}`" tag="p">
+              <v-list-item
+                class="pl-10"
+              >
+                <v-list-item-icon>
+                  <v-icon>mdi-account</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>PROFILE</v-list-item-title>
+              </v-list-item>
+            </router-link>
+            <v-list-item
+              @click.stop="dialog = true"
+              class="pl-10"
+            >
+              <v-list-item-icon>
+                <v-icon>mdi-brightness-2</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>LOGOUT</v-list-item-title>
+            </v-list-item>
+          </div>
+
+          <div v-show="$store.getters['auth/isLogin'] === false">
+            <div 
+              v-for="guestNavItem in guestNavItems" 
+              :key="guestNavItem.index"
+            >
+              <router-link :to="guestNavItem.link" tag="p">
+                <v-list-item>
+                  <v-list-item-icon>
+                    <v-icon>{{guestNavItem.icon}}</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-title>{{guestNavItem.title}}</v-list-item-title>
+                </v-list-item>
+              </router-link>
+            </div>
+          </div>
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
@@ -96,8 +105,12 @@
         <v-divider></v-divider>
         <v-card elevation="0">
           <v-card-actions class="d-flex align-center flex-column">
-            <v-btn large outlined rounded color="info" class="px-8 my-2" @click="followingUser">フォロー中</v-btn>
-            <v-btn large outlined rounded color="info" class="px-8 my-2" @click="followedUser">フォロワー</v-btn>
+            <router-link :to="`/following/${this.$store.state.auth.userId}`" tag="p">
+              <v-btn large outlined rounded color="info" class="px-8 my-2">フォロー中</v-btn>
+            </router-link>
+            <router-link :to="`/followed/${this.$store.state.auth.userId}`" tag="p">
+              <v-btn large outlined rounded color="info" class="px-8 my-2">フォロワー</v-btn>
+            </router-link>
           </v-card-actions>
         </v-card>
       </div>
@@ -125,74 +138,84 @@
             </v-list-item-content>
           </v-list-item>
           <v-divider></v-divider>
-          <v-list-item 
-            v-for="navItem in navItems" 
-            :key="navItem.title" 
-            @click="changePage(navItem.link)"
-            class="pl-9"
-          >
-            <v-list-item-icon>
-              <v-icon>{{navItem.icon}}</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>{{navItem.title}}</v-list-item-title>
-          </v-list-item>
-          <v-list-item
-            @click="profile"
-            class="pl-10"
-            v-show="$store.getters['auth/isLogin'] === true"
-          >
-            <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>PROFILE</v-list-item-title>
-          </v-list-item>
-          <v-list-item
-            @click.stop="dialog = true"
-            class="pl-9"
-          >
-            <v-list-item-icon>
-              <v-icon>mdi-brightness-2</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>LOGOUT</v-list-item-title>
-          </v-list-item>
+          <div>
+            <div 
+              v-for="navItem in navItems" 
+              :key="navItem.index"
+            >
+              <router-link :to="navItem.link" tag="p">
+                <v-list-item class="pl-9">
+                  <v-list-item-icon>
+                    <v-icon>{{navItem.icon}}</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-title>{{navItem.title}}</v-list-item-title>
+                </v-list-item>
+              </router-link>
+            </div>
+            <router-link :to="`/profile/${$store.state.auth.userId}`" tag="p">
+              <v-list-item
+                class="pl-9"
+              >
+                <v-list-item-icon>
+                  <v-icon>mdi-account</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>PROFILE</v-list-item-title>
+              </v-list-item>
+            </router-link>
+            <v-list-item
+              @click.stop="dialog = true"
+              class="pl-9 mt-5"
+            >
+              <v-list-item-icon>
+                <v-icon>mdi-brightness-2</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>LOGOUT</v-list-item-title>
+            </v-list-item>
+          </div>
         </v-list-item-group>
         <v-list-item-group
           active-class="primary--text text--accent-4"
           class="py-16"
           v-show="$store.getters['auth/isLogin'] === false"
         >
-          <v-list-item 
+          <div 
             v-for="guestNavItem in guestNavItems" 
-            :key="guestNavItem.index" 
-            @click="changePage(guestNavItem.link)"
-            class="pl-13 py-5"
+            :key="guestNavItem.index"
           >
-            <v-list-item-title>{{guestNavItem.title}}</v-list-item-title>
-          </v-list-item>
+            <router-link :to="guestNavItem.link" tag="p">
+              <v-list-item 
+                class="pl-13 py-5"
+              >
+                <v-list-item-title>{{guestNavItem.title}}</v-list-item-title>
+              </v-list-item>
+            </router-link>
+          </div>
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
+
+    <!-- dialog -->
     <v-dialog v-model="dialog" max-width="500">
       <v-card class="py-5">
         <p class="text-center text-h6 pt-5">ログアウトしますか？</p>
         <v-card-actions class="d-flex justify-center align-center">
-              <v-btn
-                color="green darken-1"
-                class="pr-5"
-                text
-                @click="dialog = false"
-              >
-                戻る
-              </v-btn>
+          <v-btn
+            color="green darken-1"
+            class="pr-5"
+            text
+            @click="dialog = false"
+          >
+            戻る
+          </v-btn>
 
-              <v-btn
-                color="red darken-1"
-                text
-                @click="logout(); dialog = false"
-              >
-                ログアウト
-              </v-btn>
-            </v-card-actions>
+          <v-btn
+            color="red darken-1"
+            text
+            @click="logout()"
+          >
+            ログアウト
+          </v-btn>
+        </v-card-actions>
       </v-card>
     </v-dialog>
   </header>
@@ -234,21 +257,10 @@ export default {
     }
   },
   methods: {
-    changePage(link) {
-      this.$router.push({path: link});
-    },
-    profile(){
-      this.$router.push({path: `/profile/${this.$store.state.auth.userId}`})
-    },
     logout(){
+      this.dialog = false
       this.$store.dispatch('auth/logout')
     },
-    followingUser(){
-      this.$router.push({path: `/following/${this.$store.state.auth.userId}`})
-    },
-    followedUser(){
-      this.$router.push({path: `/followed/${this.$store.state.auth.userId}`})
-    }
   }
 }
 </script>

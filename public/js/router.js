@@ -1994,8 +1994,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      email: '',
-      password: '',
+      email: 'kdaito0620@gmail.com',
+      password: 'password123',
       showPassword: false,
       isValid: false,
       errorMessage: this.$store.state.message,
@@ -2557,6 +2557,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2574,8 +2584,7 @@ __webpack_require__.r(__webpack_exports__);
       _this.users = res.data;
 
       _this.users.forEach(function (user) {
-        var created = user.created_at.split(' ')[0].split('-');
-        user.created_at = "".concat(created[0], "\u5E74").concat(created[1], "\u6708").concat(created[2], "\u65E5");
+        user.created_at = _this.convertCreatedAt(user.created_at);
       });
 
       if (_this.users.length === 0) {
@@ -2590,33 +2599,10 @@ __webpack_require__.r(__webpack_exports__);
       this.$router.go(-1);
     },
     follow: function follow(user) {
-      var _this2 = this;
-
-      axios.post('/api/follow', {
-        followedUserId: user.id,
-        followingUserId: this.$store.state.auth.userId
-      }).then(function (res) {
-        user.follow = true;
-      })["catch"](function (err) {
-        return _this2.showConsoleLog(err);
-      });
+      user = this.mFollow(user);
     },
     unfollow: function unfollow(user) {
-      var _this3 = this;
-
-      axios.post('/api/unfollow', {
-        followedUserId: user.id,
-        followingUserId: this.$store.state.auth.userId
-      }).then(function (res) {
-        user.follow = false;
-      })["catch"](function (err) {
-        return _this3.showConsoleLog(err);
-      });
-    },
-    showProfile: function showProfile(id) {
-      this.$router.push({
-        path: "/profile/".concat(id)
-      });
+      user = this.mUnfollow(user);
     }
   }
 });
@@ -2632,6 +2618,17 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2702,8 +2699,7 @@ __webpack_require__.r(__webpack_exports__);
       _this.users = res.data;
 
       _this.users.forEach(function (user) {
-        var created = user.created_at.split(' ')[0].split('-');
-        user.created_at = "".concat(created[0], "\u5E74").concat(created[1], "\u6708").concat(created[2], "\u65E5");
+        user.created_at = _this.convertCreatedAt(user.created_at);
       });
 
       if (_this.users.length === 0) {
@@ -2718,33 +2714,10 @@ __webpack_require__.r(__webpack_exports__);
       this.$router.go(-1);
     },
     follow: function follow(user) {
-      var _this2 = this;
-
-      axios.post('/api/follow', {
-        followedUserId: user.id,
-        followingUserId: this.$store.state.auth.userId
-      }).then(function (res) {
-        user.follow = true;
-      })["catch"](function (err) {
-        return _this2.showConsoleLog(err);
-      });
+      user = this.mFollow(user);
     },
     unfollow: function unfollow(user) {
-      var _this3 = this;
-
-      axios.post('/api/unfollow', {
-        followedUserId: user.id,
-        followingUserId: this.$store.state.auth.userId
-      }).then(function (res) {
-        user.follow = false;
-      })["catch"](function (err) {
-        return _this3.showConsoleLog(err);
-      });
-    },
-    showProfile: function showProfile(id) {
-      this.$router.push({
-        path: "/profile/".concat(id)
-      });
+      user = this.mUnfollow(user);
     }
   }
 });
@@ -2760,6 +2733,12 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2851,61 +2830,26 @@ __webpack_require__.r(__webpack_exports__);
         _this.showConsoleLog(err);
       });
     },
-    detailPost: function detailPost(id) {
-      this.$router.push({
-        path: "/detail/".concat(id)
-      });
-    },
-    editPost: function editPost(id) {
-      this.$router.push({
-        path: "/edit/".concat(id)
-      });
-    },
-    createComment: function createComment(id) {
-      this.$router.push({
-        path: "/createComment/".concat(id)
-      });
-    },
     favorite: function favorite(post) {
-      var _this2 = this;
-
-      axios.post('/api/posts/favorites', {
-        postId: post.id,
-        userId: this.$store.state.auth.userId
-      }).then(function (res) {
-        post.hasFavorite = true;
-        post.heartCount++;
-      })["catch"](function (err) {
-        return _this2.showConsoleLog(err);
-      });
+      post = this.mFavorite(post);
     },
     unfavorite: function unfavorite(post) {
-      var _this3 = this;
-
-      axios.post('/api/posts/unfavorites', {
-        postId: post.id,
-        userId: this.$store.state.auth.userId
-      }).then(function (res) {
-        post.hasFavorite = false;
-        post.heartCount--;
-      })["catch"](function (err) {
-        return _this3.showConsoleLog(err);
-      });
+      post = this.mUnfavorite(post);
     },
     morePosts: function morePosts() {
-      var _this4 = this;
+      var _this2 = this;
 
       this.loading = true;
       axios.post('/api/posts/showPosts', {
         userId: this.$store.state.auth.userId,
         start: this.start
       }).then(function (res) {
-        _this4.posts = _this4.posts.concat(res.data.posts);
-        _this4.existMorePosts = res.data.morePosts;
-        _this4.start += 10;
-        _this4.loading = false;
+        _this2.posts = _this2.posts.concat(res.data.posts);
+        _this2.existMorePosts = res.data.morePosts;
+        _this2.start += 10;
+        _this2.loading = false;
       })["catch"](function (err) {
-        return _this4.showConsoleLog(err);
+        return _this2.showConsoleLog(err);
       });
     }
   }
@@ -3083,33 +3027,30 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       post: {},
       comments: {},
-      heartCount: '',
-      hasHeart: false,
       loading: true
     };
   },
   mounted: function mounted() {
     var _this = this;
 
-    axios.get("/api/posts/".concat(this.$route.params.id)).then(function (res) {
-      _this.post = res.data.post;
-      _this.heartCount = res.data.count;
+    axios.post("/api/posts/detailPost", {
+      postId: this.$route.params.id,
+      userId: this.$store.state.auth.userId
+    }).then(function (res) {
+      _this.post = res.data;
       var data = {
         id: _this.post.id
       };
-      axios.post('/api/posts/hasFavorites', {
-        postId: _this.post.id,
-        userId: _this.$store.state.auth.userId
-      }).then(function (res) {
-        _this.hasHeart = res.data.result;
-      })["catch"](function (err) {
-        return _this.showConsoleLog(err);
-      });
       axios.post('/api/showComment', data).then(function (res) {
         _this.comments = res.data;
         _this.loading = false;
@@ -3121,47 +3062,14 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   methods: {
-    editPost: function editPost(id) {
-      this.$router.push({
-        path: "/edit/".concat(id)
-      });
-    },
     back: function back() {
       this.$router.go(-1);
     },
-    createComment: function createComment(id) {
-      this.$router.push({
-        path: "/createComment/".concat(id)
-      });
+    favorite: function favorite(post) {
+      post = this.mFavorite(post);
     },
-    favorite: function favorite(id) {
-      var _this2 = this;
-
-      axios.post('/api/posts/favorites', {
-        postId: id,
-        userId: this.$store.state.auth.userId
-      }).then(function (res) {
-        _this2.hasHeart = res.data.result;
-        _this2.heartCount = res.data.count;
-      });
-    },
-    unfavorite: function unfavorite(id) {
-      var _this3 = this;
-
-      axios.post('/api/posts/unfavorites', {
-        postId: id,
-        userId: this.$store.state.auth.userId
-      }).then(function (res) {
-        _this3.hasHeart = res.data.result;
-        _this3.heartCount = res.data.count;
-      })["catch"](function (err) {
-        return _this3.showConsoleLog(err);
-      });
-    },
-    like: function like(id) {
-      this.$router.push({
-        path: "/showLikeUsers/".concat(id)
-      });
+    unfavorite: function unfavorite(post) {
+      post = this.mUnfavorite(post);
     }
   }
 });
@@ -3177,6 +3085,10 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
 //
 //
 //
@@ -3260,11 +3172,7 @@ __webpack_require__.r(__webpack_exports__);
       userId: this.$store.state.auth.userId
     }).then(function (res) {
       _this.user = res.data;
-      _this.user.created_at = _this.user.created_at.split(' ')[0];
-
-      var created_at = _this.user.created_at.split('-');
-
-      _this.user.created_at = "".concat(created_at[0], "\u5E74").concat(created_at[1], "\u6708").concat(created_at[2], "\u65E5");
+      _this.user.created_at = _this.convertCreatedAt(_this.user.created_at);
       _this.loading = false;
     })["catch"](function (err) {
       return _this.showConsoleLog(err);
@@ -3279,51 +3187,11 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-    post: function post() {
-      this.$router.push({
-        path: "/profile/".concat(this.$route.params.id, "/")
-      });
-    },
-    like: function like() {
-      this.$router.push({
-        path: "/profile/".concat(this.$route.params.id, "/likes")
-      });
-    },
     follow: function follow(user) {
-      var _this2 = this;
-
-      axios.post('/api/follow', {
-        followedUserId: user.id,
-        followingUserId: this.$store.state.auth.userId
-      }).then(function (res) {
-        user.follow = true;
-        user.followedUser++;
-      })["catch"](function (err) {
-        return _this2.showConsoleLog(err);
-      });
+      user = this.mFollow(user);
     },
     unfollow: function unfollow(user) {
-      var _this3 = this;
-
-      axios.post('/api/unfollow', {
-        followedUserId: user.id,
-        followingUserId: this.$store.state.auth.userId
-      }).then(function (res) {
-        user.follow = false;
-        user.followedUser--;
-      })["catch"](function (err) {
-        return _this3.showConsoleLog(err);
-      });
-    },
-    followingUsers: function followingUsers(id) {
-      this.$router.push({
-        path: "/following/".concat(id)
-      });
-    },
-    followedUsers: function followedUsers(id) {
-      this.$router.push({
-        path: "/followed/".concat(id)
-      });
+      user = this.mUnfollow(user);
     }
   }
 });
@@ -3339,6 +3207,13 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3420,41 +3295,17 @@ __webpack_require__.r(__webpack_exports__);
         _this.users = res.data;
 
         _this.users.forEach(function (user) {
-          var created = user.created_at.split(' ')[0].split('-');
-          user.created_at = "".concat(created[0], "\u5E74").concat(created[1], "\u6708").concat(created[2], "\u65E5");
+          user.created_at = _this.convertCreatedAt(user.created_at);
         });
       })["catch"](function (err) {
         return _this.showConsoleLog(err);
       });
     },
     follow: function follow(user) {
-      var _this2 = this;
-
-      axios.post('/api/follow', {
-        followedUserId: user.id,
-        followingUserId: this.$store.state.auth.userId
-      }).then(function (res) {
-        user.follow = true;
-      })["catch"](function (err) {
-        return _this2.showConsoleLog(err);
-      });
+      user = this.mFollow(user);
     },
     unfollow: function unfollow(user) {
-      var _this3 = this;
-
-      axios.post('/api/unfollow', {
-        followedUserId: user.id,
-        followingUserId: this.$store.state.auth.userId
-      }).then(function (res) {
-        user.follow = false;
-      })["catch"](function (err) {
-        return _this3.showConsoleLog(err);
-      });
-    },
-    showProfile: function showProfile(id) {
-      this.$router.push({
-        path: "/profile/".concat(id)
-      });
+      user = this.mUnfollow(user);
     }
   }
 });
@@ -3470,6 +3321,13 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3556,33 +3414,10 @@ __webpack_require__.r(__webpack_exports__);
       this.$router.go(-1);
     },
     follow: function follow(user) {
-      var _this2 = this;
-
-      axios.post('/api/follow', {
-        followedUserId: user.id,
-        followingUserId: this.$store.state.auth.userId
-      }).then(function (res) {
-        user.follow = true;
-      })["catch"](function (err) {
-        return _this2.showConsoleLog(err);
-      });
+      user = this.mFollow(user);
     },
     unfollow: function unfollow(user) {
-      var _this3 = this;
-
-      axios.post('/api/unfollow', {
-        followedUserId: user.id,
-        followingUserId: this.$store.state.auth.userId
-      }).then(function (res) {
-        user.follow = false;
-      })["catch"](function (err) {
-        return _this3.showConsoleLog(err);
-      });
-    },
-    showProfile: function showProfile(id) {
-      this.$router.push({
-        path: "/profile/".concat(id)
-      });
+      user = this.mUnfollow(user);
     }
   }
 });
@@ -3598,6 +3433,11 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3689,49 +3529,14 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   methods: {
-    detailPost: function detailPost(id) {
-      this.$router.push({
-        path: "/detail/".concat(id)
-      });
-    },
-    editPost: function editPost(id) {
-      this.$router.push({
-        path: "/edit/".concat(id)
-      });
-    },
-    createComment: function createComment(id) {
-      this.$router.push({
-        path: "/createComment/".concat(id)
-      });
-    },
     favorite: function favorite(post) {
-      var _this2 = this;
-
-      axios.post('/api/posts/favorites', {
-        postId: post.id,
-        userId: this.$store.state.auth.userId
-      }).then(function (res) {
-        post.hasFavorite = true;
-        post.heartCount++;
-      })["catch"](function (err) {
-        return _this2.showConsoleLog(err);
-      });
+      post = this.mFavorite(post);
     },
     unfavorite: function unfavorite(post) {
-      var _this3 = this;
-
-      axios.post('/api/posts/unfavorites', {
-        postId: post.id,
-        userId: this.$store.state.auth.userId
-      }).then(function (res) {
-        post.hasFavorite = false;
-        post.heartCount--;
-      })["catch"](function (err) {
-        return _this3.showConsoleLog(err);
-      });
+      post = this.mUnfavorite(post);
     },
     morePosts: function morePosts() {
-      var _this4 = this;
+      var _this2 = this;
 
       this.loading = true;
       axios.post('/api/posts/likePosts', {
@@ -3739,12 +3544,12 @@ __webpack_require__.r(__webpack_exports__);
         userId: this.$store.state.auth.userId,
         start: this.start
       }).then(function (res) {
-        _this4.posts = _this4.posts.concat(res.data.posts);
-        _this4.start += 10;
-        _this4.existMorePosts = res.data.morePosts;
-        _this4.loading = false;
+        _this2.posts = _this2.posts.concat(res.data.posts);
+        _this2.start += 10;
+        _this2.existMorePosts = res.data.morePosts;
+        _this2.loading = false;
       })["catch"](function (err) {
-        return _this4.showConsoleLog(err);
+        return _this2.showConsoleLog(err);
       });
     }
   }
@@ -3761,6 +3566,11 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3852,62 +3662,27 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   methods: {
-    detailPost: function detailPost(id) {
-      this.$router.push({
-        path: "/detail/".concat(id)
-      });
-    },
-    editPost: function editPost(id) {
-      this.$router.push({
-        path: "/edit/".concat(id)
-      });
-    },
-    createComment: function createComment(id) {
-      this.$router.push({
-        path: "/createComment/".concat(id)
-      });
-    },
     favorite: function favorite(post) {
-      var _this2 = this;
-
-      axios.post('/api/posts/favorites', {
-        postId: post.id,
-        userId: this.$store.state.auth.userId
-      }).then(function (res) {
-        post.hasFavorite = true;
-        post.heartCount++;
-      })["catch"](function (err) {
-        return _this2.showConsoleLog(err);
-      });
+      post = this.mFavorite(post);
     },
     unfavorite: function unfavorite(post) {
-      var _this3 = this;
-
-      axios.post('/api/posts/unfavorites', {
-        postId: post.id,
-        userId: this.$store.state.auth.userId
-      }).then(function (res) {
-        post.hasFavorite = false;
-        post.heartCount--;
-      })["catch"](function (err) {
-        return _this3.showConsoleLog(err);
-      });
+      post = this.mUnfavorite(post);
     },
     morePosts: function morePosts() {
-      var _this4 = this;
+      var _this2 = this;
 
       this.loading = true;
-      axios.post('/api/posts/likePosts', {
+      axios.post('/api/posts/userPosts', {
         id: this.$route.params.id,
         userId: this.$store.state.auth.userId,
         start: this.start
       }).then(function (res) {
-        _this4.posts = _this4.posts.concat(res.data.posts);
-        _this4.start += 10;
-        _this4.existMorePosts = res.data.morePosts;
-        _this4.loading = false;
+        _this2.posts = _this2.posts.concat(res.data.posts);
+        _this2.start += 10;
+        _this2.existMorePosts = res.data.morePosts;
+        _this2.loading = false;
       })["catch"](function (err) {
-        return _this4.showConsoleLog(err);
+        return _this2.showConsoleLog(err);
       });
     }
   }
@@ -6027,115 +5802,137 @@ var render = function() {
           _vm._v(" "),
           _vm._l(_vm.users, function(user) {
             return _c(
-              "v-card",
-              {
-                key: user.index,
-                attrs: { tile: "", outlined: "" },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.showProfile(user.id)
-                  }
-                }
-              },
+              "div",
+              { key: user.index },
               [
                 _c(
-                  "div",
-                  {
-                    staticClass:
-                      "d-flex align-center justify-space-between mb-0 pb-0 pt-3"
-                  },
+                  "router-link",
+                  { attrs: { to: "/profile/" + user.id, tag: "p" } },
                   [
                     _c(
-                      "div",
-                      [
-                        _c("v-card-title", { staticClass: "pb-2 pt-0" }, [
-                          _vm._v(_vm._s(user.name))
-                        ])
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
+                      "v-card",
+                      { attrs: { tile: "", outlined: "" } },
                       [
                         _c(
-                          "v-btn",
+                          "div",
                           {
-                            directives: [
-                              {
-                                name: "show",
-                                rawName: "v-show",
-                                value:
-                                  user.id !== _vm.$store.state.auth.userId &&
-                                  !user.follow,
-                                expression:
-                                  "user.id !== $store.state.auth.userId && !user.follow"
-                              }
-                            ],
-                            staticClass: "align-self-center mr-2",
-                            attrs: { outlined: "", rounded: "", color: "info" },
-                            on: {
-                              click: function($event) {
-                                $event.stopPropagation()
-                                return _vm.follow(user)
-                              }
-                            }
+                            staticClass:
+                              "d-flex align-center justify-space-between mb-0 pb-0 pt-3"
                           },
-                          [_vm._v("フォローする")]
+                          [
+                            _c(
+                              "div",
+                              [
+                                _c(
+                                  "v-card-title",
+                                  { staticClass: "pb-2 pt-0" },
+                                  [_vm._v(_vm._s(user.name))]
+                                )
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              [
+                                _c(
+                                  "v-btn",
+                                  {
+                                    directives: [
+                                      {
+                                        name: "show",
+                                        rawName: "v-show",
+                                        value:
+                                          user.id !==
+                                            _vm.$store.state.auth.userId &&
+                                          !user.follow,
+                                        expression:
+                                          "user.id !== $store.state.auth.userId && !user.follow"
+                                      }
+                                    ],
+                                    staticClass: "align-self-center mr-2",
+                                    attrs: {
+                                      outlined: "",
+                                      rounded: "",
+                                      color: "info"
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        $event.stopPropagation()
+                                        return _vm.follow(user)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("フォローする")]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "v-btn",
+                                  {
+                                    directives: [
+                                      {
+                                        name: "show",
+                                        rawName: "v-show",
+                                        value:
+                                          user.id !==
+                                            _vm.$store.state.auth.userId &&
+                                          user.follow,
+                                        expression:
+                                          "user.id !== $store.state.auth.userId && user.follow"
+                                      }
+                                    ],
+                                    staticClass: "align-self-center mr-2",
+                                    attrs: {
+                                      dark: "",
+                                      rounded: "",
+                                      color: "info"
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        $event.stopPropagation()
+                                        return _vm.unfollow(user)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("フォロー中")]
+                                )
+                              ],
+                              1
+                            )
+                          ]
                         ),
                         _vm._v(" "),
+                        _c("v-card-text", { staticClass: "pb-5" }, [
+                          _vm._v(_vm._s(user.text))
+                        ]),
+                        _vm._v(" "),
+                        _c("v-card-subtitle", { staticClass: "pt-0" }, [
+                          _vm._v(_vm._s(user.created_at) + "から利用しています")
+                        ]),
+                        _vm._v(" "),
+                        _c("v-divider", { staticClass: "py-0 my-0" }),
+                        _vm._v(" "),
                         _c(
-                          "v-btn",
+                          "v-card-subtitle",
                           {
-                            directives: [
-                              {
-                                name: "show",
-                                rawName: "v-show",
-                                value:
-                                  user.id !== _vm.$store.state.auth.userId &&
-                                  user.follow,
-                                expression:
-                                  "user.id !== $store.state.auth.userId && user.follow"
-                              }
-                            ],
-                            staticClass: "align-self-center mr-2",
-                            attrs: { dark: "", rounded: "", color: "info" },
-                            on: {
-                              click: function($event) {
-                                $event.stopPropagation()
-                                return _vm.unfollow(user)
-                              }
-                            }
+                            staticClass:
+                              "pb-0 d-flex justify-start align-center"
                           },
-                          [_vm._v("フォロー中")]
+                          [
+                            _c("p", { staticClass: "pr-4" }, [
+                              _vm._v("フォロー中:" + _vm._s(user.followingUser))
+                            ]),
+                            _vm._v(" "),
+                            _c("p", [
+                              _vm._v("フォロワー:" + _vm._s(user.followedUser))
+                            ])
+                          ]
                         )
                       ],
                       1
                     )
-                  ]
-                ),
-                _vm._v(" "),
-                _c("v-card-text", { staticClass: "pb-5" }, [
-                  _vm._v(_vm._s(user.text))
-                ]),
-                _vm._v(" "),
-                _c("v-card-subtitle", { staticClass: "pt-0" }, [
-                  _vm._v(_vm._s(user.created_at) + "から利用しています")
-                ]),
-                _vm._v(" "),
-                _c("v-divider", { staticClass: "py-0 my-0" }),
-                _vm._v(" "),
-                _c(
-                  "v-card-subtitle",
-                  { staticClass: "pb-0 d-flex justify-start align-center" },
-                  [
-                    _c("p", { staticClass: "pr-4" }, [
-                      _vm._v("フォロー中:" + _vm._s(user.followingUser))
-                    ]),
-                    _vm._v(" "),
-                    _c("p", [_vm._v("フォロワー:" + _vm._s(user.followedUser))])
-                  ]
+                  ],
+                  1
                 )
               ],
               1
@@ -6245,115 +6042,137 @@ var render = function() {
           _vm._v(" "),
           _vm._l(_vm.users, function(user) {
             return _c(
-              "v-card",
-              {
-                key: user.index,
-                attrs: { tile: "", outlined: "" },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.showProfile(user.id)
-                  }
-                }
-              },
+              "div",
+              { key: user.index },
               [
                 _c(
-                  "div",
-                  {
-                    staticClass:
-                      "d-flex align-center justify-space-between mb-0 pb-0 pt-3"
-                  },
+                  "router-link",
+                  { attrs: { to: "/profile/" + user.id, tag: "p" } },
                   [
                     _c(
-                      "div",
-                      [
-                        _c("v-card-title", { staticClass: "pb-2 pt-0" }, [
-                          _vm._v(_vm._s(user.name))
-                        ])
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
+                      "v-card",
+                      { attrs: { tile: "", outlined: "" } },
                       [
                         _c(
-                          "v-btn",
+                          "div",
                           {
-                            directives: [
-                              {
-                                name: "show",
-                                rawName: "v-show",
-                                value:
-                                  user.id !== _vm.$store.state.auth.userId &&
-                                  !user.follow,
-                                expression:
-                                  "user.id !== $store.state.auth.userId && !user.follow"
-                              }
-                            ],
-                            staticClass: "align-self-center mr-2",
-                            attrs: { outlined: "", rounded: "", color: "info" },
-                            on: {
-                              click: function($event) {
-                                $event.stopPropagation()
-                                return _vm.follow(user)
-                              }
-                            }
+                            staticClass:
+                              "d-flex align-center justify-space-between mb-0 pb-0 pt-3"
                           },
-                          [_vm._v("フォローする")]
+                          [
+                            _c(
+                              "div",
+                              [
+                                _c(
+                                  "v-card-title",
+                                  { staticClass: "pb-2 pt-0" },
+                                  [_vm._v(_vm._s(user.name))]
+                                )
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              [
+                                _c(
+                                  "v-btn",
+                                  {
+                                    directives: [
+                                      {
+                                        name: "show",
+                                        rawName: "v-show",
+                                        value:
+                                          user.id !==
+                                            _vm.$store.state.auth.userId &&
+                                          !user.follow,
+                                        expression:
+                                          "user.id !== $store.state.auth.userId && !user.follow"
+                                      }
+                                    ],
+                                    staticClass: "align-self-center mr-2",
+                                    attrs: {
+                                      outlined: "",
+                                      rounded: "",
+                                      color: "info"
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        $event.stopPropagation()
+                                        return _vm.follow(user)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("フォローする")]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "v-btn",
+                                  {
+                                    directives: [
+                                      {
+                                        name: "show",
+                                        rawName: "v-show",
+                                        value:
+                                          user.id !==
+                                            _vm.$store.state.auth.userId &&
+                                          user.follow,
+                                        expression:
+                                          "user.id !== $store.state.auth.userId && user.follow"
+                                      }
+                                    ],
+                                    staticClass: "align-self-center mr-2",
+                                    attrs: {
+                                      dark: "",
+                                      rounded: "",
+                                      color: "info"
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        $event.stopPropagation()
+                                        return _vm.unfollow(user)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("フォロー中")]
+                                )
+                              ],
+                              1
+                            )
+                          ]
                         ),
                         _vm._v(" "),
+                        _c("v-card-text", { staticClass: "pb-5" }, [
+                          _vm._v(_vm._s(user.text))
+                        ]),
+                        _vm._v(" "),
+                        _c("v-card-subtitle", { staticClass: "pt-0" }, [
+                          _vm._v(_vm._s(user.created_at) + "から利用しています")
+                        ]),
+                        _vm._v(" "),
+                        _c("v-divider", { staticClass: "py-0 my-0" }),
+                        _vm._v(" "),
                         _c(
-                          "v-btn",
+                          "v-card-subtitle",
                           {
-                            directives: [
-                              {
-                                name: "show",
-                                rawName: "v-show",
-                                value:
-                                  user.id !== _vm.$store.state.auth.userId &&
-                                  user.follow,
-                                expression:
-                                  "user.id !== $store.state.auth.userId && user.follow"
-                              }
-                            ],
-                            staticClass: "align-self-center mr-2",
-                            attrs: { dark: "", rounded: "", color: "info" },
-                            on: {
-                              click: function($event) {
-                                $event.stopPropagation()
-                                return _vm.unfollow(user)
-                              }
-                            }
+                            staticClass:
+                              "pb-0 d-flex justify-start align-center"
                           },
-                          [_vm._v("フォロー中")]
+                          [
+                            _c("p", { staticClass: "pr-4" }, [
+                              _vm._v("フォロー中:" + _vm._s(user.followingUser))
+                            ]),
+                            _vm._v(" "),
+                            _c("p", [
+                              _vm._v("フォロワー:" + _vm._s(user.followedUser))
+                            ])
+                          ]
                         )
                       ],
                       1
                     )
-                  ]
-                ),
-                _vm._v(" "),
-                _c("v-card-text", { staticClass: "pb-5" }, [
-                  _vm._v(_vm._s(user.text))
-                ]),
-                _vm._v(" "),
-                _c("v-card-subtitle", { staticClass: "pt-0" }, [
-                  _vm._v(_vm._s(user.created_at) + "から利用しています")
-                ]),
-                _vm._v(" "),
-                _c("v-divider", { staticClass: "py-0 my-0" }),
-                _vm._v(" "),
-                _c(
-                  "v-card-subtitle",
-                  { staticClass: "pb-0 d-flex justify-start align-center" },
-                  [
-                    _c("p", { staticClass: "pr-4" }, [
-                      _vm._v("フォロー中:" + _vm._s(user.followingUser))
-                    ]),
-                    _vm._v(" "),
-                    _c("p", [_vm._v("フォロワー:" + _vm._s(user.followedUser))])
-                  ]
+                  ],
+                  1
                 )
               ],
               1
@@ -6427,32 +6246,42 @@ var render = function() {
                   { staticClass: "d-flex align-center justify-center pb-6" },
                   [
                     _c(
-                      "v-btn",
+                      "router-link",
                       {
-                        staticClass: "mx-md-7 mx-3",
-                        attrs: { icon: "", color: "gley" },
-                        on: {
-                          click: function($event) {
-                            return _vm.detailPost(post.id)
-                          }
-                        }
+                        staticClass: "mt-4",
+                        attrs: { to: "/detail/" + post.id, tag: "p" }
                       },
-                      [_c("v-icon", [_vm._v("mdi-clipboard-text")])],
+                      [
+                        _c(
+                          "v-btn",
+                          {
+                            staticClass: "mx-md-7 mx-3",
+                            attrs: { icon: "", color: "gley" }
+                          },
+                          [_c("v-icon", [_vm._v("mdi-clipboard-text")])],
+                          1
+                        )
+                      ],
                       1
                     ),
                     _vm._v(" "),
                     _c(
-                      "v-btn",
+                      "router-link",
                       {
-                        staticClass: "mx-md-7 mx-3",
-                        attrs: { icon: "", color: "gley" },
-                        on: {
-                          click: function($event) {
-                            return _vm.createComment(post.id)
-                          }
-                        }
+                        staticClass: "mt-4",
+                        attrs: { to: "/createComment/" + post.id, tag: "p" }
                       },
-                      [_c("v-icon", [_vm._v("mdi-message-reply")])],
+                      [
+                        _c(
+                          "v-btn",
+                          {
+                            staticClass: "mx-md-7 mx-3",
+                            attrs: { icon: "", color: "gley" }
+                          },
+                          [_c("v-icon", [_vm._v("mdi-message-reply")])],
+                          1
+                        )
+                      ],
                       1
                     ),
                     _vm._v(" "),
@@ -6509,7 +6338,7 @@ var render = function() {
                     ),
                     _vm._v(" "),
                     _c(
-                      "v-btn",
+                      "div",
                       {
                         directives: [
                           {
@@ -6520,16 +6349,29 @@ var render = function() {
                             expression:
                               "post.user.id === $store.state.auth.userId"
                           }
-                        ],
-                        staticClass: "mx-md-7 mx-3",
-                        attrs: { icon: "", color: "gley" },
-                        on: {
-                          click: function($event) {
-                            return _vm.editPost(post.id)
-                          }
-                        }
+                        ]
                       },
-                      [_c("v-icon", [_vm._v("mdi-pencil")])],
+                      [
+                        _c(
+                          "router-link",
+                          {
+                            staticClass: "mt-4",
+                            attrs: { to: "/edit/" + post.id, tag: "p" }
+                          },
+                          [
+                            _c(
+                              "v-btn",
+                              {
+                                staticClass: "mx-md-7 mx-3",
+                                attrs: { icon: "", color: "gley" }
+                              },
+                              [_c("v-icon", [_vm._v("mdi-pencil")])],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      ],
                       1
                     )
                   ],
@@ -6544,21 +6386,27 @@ var render = function() {
             "div",
             { staticClass: "d-flex justify-center align-center py-8" },
             [
-              !_vm.loading && _vm.existMorePosts
-                ? _c(
-                    "v-btn",
+              _c(
+                "v-btn",
+                {
+                  directives: [
                     {
-                      attrs: {
-                        color: "primary",
-                        elevation: "6",
-                        rounded: "",
-                        "x-large": ""
-                      },
-                      on: { click: _vm.morePosts }
-                    },
-                    [_vm._v("もっと見る")]
-                  )
-                : _vm._e()
+                      name: "show",
+                      rawName: "v-show",
+                      value: !_vm.loading && _vm.existMorePosts,
+                      expression: "!loading && existMorePosts"
+                    }
+                  ],
+                  attrs: {
+                    color: "primary",
+                    elevation: "6",
+                    rounded: "",
+                    "x-large": ""
+                  },
+                  on: { click: _vm.morePosts }
+                },
+                [_vm._v("もっと見る")]
+              )
             ],
             1
           )
@@ -6566,18 +6414,26 @@ var render = function() {
         2
       ),
       _vm._v(" "),
-      _vm.loading
-        ? _c(
-            "div",
-            { staticClass: "d-flex justify-center align-center" },
-            [
-              _c("v-progress-circular", {
-                attrs: { size: 70, width: 7, color: "info", indeterminate: "" }
-              })
-            ],
-            1
-          )
-        : _vm._e()
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.loading,
+              expression: "loading"
+            }
+          ],
+          staticClass: "d-flex justify-center align-center"
+        },
+        [
+          _c("v-progress-circular", {
+            attrs: { size: 70, width: 7, color: "info", indeterminate: "" }
+          })
+        ],
+        1
+      )
     ],
     1
   )
@@ -6769,21 +6625,21 @@ var render = function() {
                   "v-card-subtitle",
                   { staticClass: "py-2" },
                   [
-                    _vm.post.id
-                      ? _c(
+                    _c(
+                      "router-link",
+                      {
+                        staticClass: "mb-0 pb-0",
+                        attrs: { to: "/showLikeUsers/" + _vm.post.id, tag: "p" }
+                      },
+                      [
+                        _c(
                           "v-btn",
-                          {
-                            staticClass: "m-0 p-0",
-                            attrs: { text: "" },
-                            on: {
-                              click: function($event) {
-                                return _vm.like(_vm.post.id)
-                              }
-                            }
-                          },
-                          [_vm._v(_vm._s(_vm.heartCount) + "件のいいね")]
+                          { staticClass: "m-0 p-0", attrs: { text: "" } },
+                          [_vm._v(_vm._s(_vm.post.heartCount) + "件のいいね")]
                         )
-                      : _vm._e()
+                      ],
+                      1
+                    )
                   ],
                   1
                 ),
@@ -6812,17 +6668,22 @@ var render = function() {
                     ),
                     _vm._v(" "),
                     _c(
-                      "v-btn",
+                      "router-link",
                       {
-                        staticClass: "mx-md-7 mx-3",
-                        attrs: { icon: "", color: "gley" },
-                        on: {
-                          click: function($event) {
-                            return _vm.createComment(_vm.post.id)
-                          }
-                        }
+                        staticClass: "mt-4",
+                        attrs: { to: "/createComment/" + _vm.post.id, tag: "p" }
                       },
-                      [_c("v-icon", [_vm._v("mdi-message-reply")])],
+                      [
+                        _c(
+                          "v-btn",
+                          {
+                            staticClass: "mx-md-7 mx-3",
+                            attrs: { icon: "", color: "gley" }
+                          },
+                          [_c("v-icon", [_vm._v("mdi-message-reply")])],
+                          1
+                        )
+                      ],
                       1
                     ),
                     _vm._v(" "),
@@ -6834,15 +6695,15 @@ var render = function() {
                               {
                                 name: "show",
                                 rawName: "v-show",
-                                value: !_vm.hasHeart,
-                                expression: "!hasHeart"
+                                value: !_vm.post.hasFavorite,
+                                expression: "!post.hasFavorite"
                               }
                             ],
                             staticClass: "mx-md-7 mx-3",
                             attrs: { icon: "", color: "gley" },
                             on: {
                               click: function($event) {
-                                return _vm.favorite(_vm.post.id)
+                                return _vm.favorite(_vm.post)
                               }
                             }
                           },
@@ -6859,15 +6720,15 @@ var render = function() {
                               {
                                 name: "show",
                                 rawName: "v-show",
-                                value: _vm.hasHeart,
-                                expression: "hasHeart"
+                                value: _vm.post.hasFavorite,
+                                expression: "post.hasFavorite"
                               }
                             ],
                             staticClass: "mx-md-7 mx-3",
                             attrs: { icon: "", color: "pink" },
                             on: {
                               click: function($event) {
-                                return _vm.unfavorite(_vm.post.id)
+                                return _vm.unfavorite(_vm.post)
                               }
                             }
                           },
@@ -6876,33 +6737,43 @@ var render = function() {
                         )
                       : _vm._e(),
                     _vm._v(" "),
-                    _vm.post.id && _vm.post.user.id
-                      ? _c(
-                          "v-btn",
+                    _c(
+                      "div",
+                      {
+                        directives: [
                           {
-                            directives: [
-                              {
-                                name: "show",
-                                rawName: "v-show",
-                                value:
-                                  _vm.post.user.id ===
-                                  _vm.$store.state.auth.userId,
-                                expression:
-                                  "post.user.id === $store.state.auth.userId"
-                              }
-                            ],
-                            staticClass: "mx-md-7 mx-3",
-                            attrs: { icon: "", color: "gley" },
-                            on: {
-                              click: function($event) {
-                                return _vm.editPost(_vm.post.id)
-                              }
-                            }
+                            name: "show",
+                            rawName: "v-show",
+                            value:
+                              _vm.post.user.id === _vm.$store.state.auth.userId,
+                            expression:
+                              "post.user.id === $store.state.auth.userId"
+                          }
+                        ]
+                      },
+                      [
+                        _c(
+                          "router-link",
+                          {
+                            staticClass: "mt-4",
+                            attrs: { to: "/edit/" + _vm.post.id, tag: "p" }
                           },
-                          [_c("v-icon", [_vm._v("mdi-pencil")])],
+                          [
+                            _c(
+                              "v-btn",
+                              {
+                                staticClass: "mx-md-7 mx-3",
+                                attrs: { icon: "", color: "gley" }
+                              },
+                              [_c("v-icon", [_vm._v("mdi-pencil")])],
+                              1
+                            )
+                          ],
                           1
                         )
-                      : _vm._e()
+                      ],
+                      1
+                    )
                   ],
                   1
                 )
@@ -7097,34 +6968,46 @@ var render = function() {
                 _vm._v(" "),
                 _c(
                   "v-card-subtitle",
-                  { staticClass: "py-2" },
+                  { staticClass: "py-2 d-flex align-center mb-0" },
                   [
                     _c(
-                      "v-btn",
+                      "router-link",
                       {
-                        staticClass: "m-0 p-0",
-                        attrs: { text: "" },
-                        on: {
-                          click: function($event) {
-                            return _vm.followingUsers(_vm.user.id)
-                          }
-                        }
+                        staticClass: "m-0 p-0 mr-3",
+                        attrs: { to: "/following/" + _vm.user.id, tag: "p" }
                       },
-                      [_vm._v("フォロー中: " + _vm._s(_vm.user.followingUser))]
+                      [
+                        _c(
+                          "v-btn",
+                          { staticClass: "m-0 p-0", attrs: { text: "" } },
+                          [
+                            _vm._v(
+                              "フォロー中: " + _vm._s(_vm.user.followingUser)
+                            )
+                          ]
+                        )
+                      ],
+                      1
                     ),
                     _vm._v(" "),
                     _c(
-                      "v-btn",
+                      "router-link",
                       {
                         staticClass: "m-0 p-0",
-                        attrs: { text: "" },
-                        on: {
-                          click: function($event) {
-                            return _vm.followedUsers(_vm.user.id)
-                          }
-                        }
+                        attrs: { to: "/followed/" + _vm.user.id, tag: "p" }
                       },
-                      [_vm._v("フォロワー: " + _vm._s(_vm.user.followedUser))]
+                      [
+                        _c(
+                          "v-btn",
+                          { staticClass: "m-0 p-0", attrs: { text: "" } },
+                          [
+                            _vm._v(
+                              "フォロワー: " + _vm._s(_vm.user.followedUser)
+                            )
+                          ]
+                        )
+                      ],
+                      1
                     )
                   ],
                   1
@@ -7144,9 +7027,29 @@ var render = function() {
                   "v-tabs",
                   { attrs: { "fixed-tabs": "" } },
                   [
-                    _c("v-tab", { on: { click: _vm.post } }, [_vm._v("投稿")]),
+                    _c(
+                      "v-tab",
+                      {
+                        attrs: {
+                          to: {
+                            path: "/profile/" + this.$route.params.id + "/"
+                          }
+                        }
+                      },
+                      [_vm._v("投稿")]
+                    ),
                     _vm._v(" "),
-                    _c("v-tab", { on: { click: _vm.like } }, [_vm._v("いいね")])
+                    _c(
+                      "v-tab",
+                      {
+                        attrs: {
+                          to: {
+                            path: "/profile/" + this.$route.params.id + "/likes"
+                          }
+                        }
+                      },
+                      [_vm._v("いいね")]
+                    )
                   ],
                   1
                 )
@@ -7270,116 +7173,131 @@ var render = function() {
       _vm._v(" "),
       _vm._l(_vm.users, function(user) {
         return _c(
-          "v-card",
-          {
-            key: user.index,
-            staticClass: "mx-auto pt-5 mt-5",
-            attrs: { "max-width": "500px" },
-            on: {
-              click: function($event) {
-                $event.preventDefault()
-                return _vm.showProfile(user.id)
-              }
-            }
-          },
+          "div",
+          { key: user.index },
           [
             _c(
-              "div",
-              {
-                staticClass:
-                  "d-flex align-center justify-space-between mb-0 pb-0"
-              },
+              "router-link",
+              { attrs: { to: "/profile/" + user.id, tag: "p" } },
               [
                 _c(
-                  "div",
-                  [
-                    _c("v-card-title", { staticClass: "pb-2 pt-0" }, [
-                      _vm._v(_vm._s(user.name))
-                    ])
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
+                  "v-card",
+                  {
+                    staticClass: "mx-auto pt-5 mt-5",
+                    attrs: { "max-width": "500px" }
+                  },
                   [
                     _c(
-                      "v-btn",
+                      "div",
                       {
-                        directives: [
-                          {
-                            name: "show",
-                            rawName: "v-show",
-                            value:
-                              user.id !== _vm.$store.state.auth.userId &&
-                              !user.follow,
-                            expression:
-                              "user.id !== $store.state.auth.userId && !user.follow"
-                          }
-                        ],
-                        staticClass: "align-self-center mr-2",
-                        attrs: { outlined: "", rounded: "", color: "info" },
-                        on: {
-                          click: function($event) {
-                            $event.stopPropagation()
-                            return _vm.follow(user)
-                          }
-                        }
+                        staticClass:
+                          "d-flex align-center justify-space-between mb-0 pb-0"
                       },
-                      [_vm._v("フォローする")]
+                      [
+                        _c(
+                          "div",
+                          [
+                            _c("v-card-title", { staticClass: "pb-2 pt-0" }, [
+                              _vm._v(_vm._s(user.name))
+                            ])
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          [
+                            _c(
+                              "v-btn",
+                              {
+                                directives: [
+                                  {
+                                    name: "show",
+                                    rawName: "v-show",
+                                    value:
+                                      user.id !==
+                                        _vm.$store.state.auth.userId &&
+                                      !user.follow,
+                                    expression:
+                                      "user.id !== $store.state.auth.userId && !user.follow"
+                                  }
+                                ],
+                                staticClass: "align-self-center mr-2",
+                                attrs: {
+                                  outlined: "",
+                                  rounded: "",
+                                  color: "info"
+                                },
+                                on: {
+                                  click: function($event) {
+                                    $event.stopPropagation()
+                                    return _vm.follow(user)
+                                  }
+                                }
+                              },
+                              [_vm._v("フォローする")]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "v-btn",
+                              {
+                                directives: [
+                                  {
+                                    name: "show",
+                                    rawName: "v-show",
+                                    value:
+                                      user.id !==
+                                        _vm.$store.state.auth.userId &&
+                                      user.follow,
+                                    expression:
+                                      "user.id !== $store.state.auth.userId && user.follow"
+                                  }
+                                ],
+                                staticClass: "align-self-center mr-2",
+                                attrs: { dark: "", rounded: "", color: "info" },
+                                on: {
+                                  click: function($event) {
+                                    $event.stopPropagation()
+                                    return _vm.unfollow(user)
+                                  }
+                                }
+                              },
+                              [_vm._v("フォロー中")]
+                            )
+                          ],
+                          1
+                        )
+                      ]
                     ),
                     _vm._v(" "),
+                    _c("v-card-text", { staticClass: "pb-5" }, [
+                      _vm._v(_vm._s(user.text))
+                    ]),
+                    _vm._v(" "),
+                    _c("v-card-subtitle", { staticClass: "pt-0" }, [
+                      _vm._v(_vm._s(user.created_at) + "から利用しています")
+                    ]),
+                    _vm._v(" "),
+                    _c("v-divider", { staticClass: "py-0 my-0" }),
+                    _vm._v(" "),
                     _c(
-                      "v-btn",
-                      {
-                        directives: [
-                          {
-                            name: "show",
-                            rawName: "v-show",
-                            value:
-                              user.id !== _vm.$store.state.auth.userId &&
-                              user.follow,
-                            expression:
-                              "user.id !== $store.state.auth.userId && user.follow"
-                          }
-                        ],
-                        staticClass: "align-self-center mr-2",
-                        attrs: { dark: "", rounded: "", color: "info" },
-                        on: {
-                          click: function($event) {
-                            $event.stopPropagation()
-                            return _vm.unfollow(user)
-                          }
-                        }
-                      },
-                      [_vm._v("フォロー中")]
+                      "v-card-subtitle",
+                      { staticClass: "pb-0 d-flex justify-start align-center" },
+                      [
+                        _c("p", { staticClass: "pr-4" }, [
+                          _vm._v("フォロー中:" + _vm._s(user.followingUser))
+                        ]),
+                        _vm._v(" "),
+                        _c("p", [
+                          _vm._v("フォロワー:" + _vm._s(user.followedUser))
+                        ])
+                      ]
                     )
                   ],
                   1
                 )
-              ]
-            ),
-            _vm._v(" "),
-            _c("v-card-text", { staticClass: "pb-5" }, [
-              _vm._v(_vm._s(user.text))
-            ]),
-            _vm._v(" "),
-            _c("v-card-subtitle", { staticClass: "pt-0" }, [
-              _vm._v(_vm._s(user.created_at) + "から利用しています")
-            ]),
-            _vm._v(" "),
-            _c("v-divider", { staticClass: "py-0 my-0" }),
-            _vm._v(" "),
-            _c(
-              "v-card-subtitle",
-              { staticClass: "pb-0 d-flex justify-start align-center" },
-              [
-                _c("p", { staticClass: "pr-4" }, [
-                  _vm._v("フォロー中:" + _vm._s(user.followingUser))
-                ]),
-                _vm._v(" "),
-                _c("p", [_vm._v("フォロワー:" + _vm._s(user.followedUser))])
-              ]
+              ],
+              1
             )
           ],
           1
@@ -7486,116 +7404,137 @@ var render = function() {
           _vm._v(" "),
           _vm._l(_vm.users, function(user) {
             return _c(
-              "v-card",
-              {
-                key: user.index,
-                attrs: { tile: "", outlined: "" },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.showProfile(user.id)
-                  }
-                }
-              },
+              "div",
+              { key: user.index },
               [
                 _c(
-                  "div",
-                  {
-                    staticClass:
-                      "d-flex align-center justify-space-between mb-0 pb-0 pt-3"
-                  },
+                  "router-link",
+                  { attrs: { to: "/profile/" + user.id, tag: "p" } },
                   [
                     _c(
-                      "div",
-                      [
-                        _c("v-card-title", { staticClass: "pb-2 pt-0" }, [
-                          _vm._v(_vm._s(user.name))
-                        ])
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
+                      "v-card",
+                      { attrs: { tile: "", outlined: "" } },
                       [
                         _c(
-                          "v-btn",
+                          "div",
                           {
-                            directives: [
-                              {
-                                name: "show",
-                                rawName: "v-show",
-                                value:
-                                  user.id !== _vm.$store.state.auth.userId &&
-                                  !user.follow,
-                                expression:
-                                  "user.id !== $store.state.auth.userId && !user.follow"
-                              }
-                            ],
-                            staticClass: "align-self-center mr-2",
-                            attrs: { outlined: "", rounded: "", color: "info" },
-                            on: {
-                              click: function($event) {
-                                $event.stopPropagation()
-                                return _vm.follow(user)
-                              }
-                            }
+                            staticClass:
+                              "d-flex align-center justify-space-between mb-0 pb-0 pt-3"
                           },
-                          [_vm._v("フォローする")]
+                          [
+                            _c(
+                              "div",
+                              [
+                                _c(
+                                  "v-card-title",
+                                  { staticClass: "pb-2 pt-0" },
+                                  [_vm._v(_vm._s(user.name))]
+                                )
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              [
+                                _c(
+                                  "v-btn",
+                                  {
+                                    directives: [
+                                      {
+                                        name: "show",
+                                        rawName: "v-show",
+                                        value:
+                                          user.id !==
+                                            _vm.$store.state.auth.userId &&
+                                          !user.follow,
+                                        expression:
+                                          "user.id !== $store.state.auth.userId && !user.follow"
+                                      }
+                                    ],
+                                    staticClass: "align-self-center mr-2",
+                                    attrs: {
+                                      outlined: "",
+                                      rounded: "",
+                                      color: "info"
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        $event.stopPropagation()
+                                        return _vm.follow(user)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("フォローする")]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "v-btn",
+                                  {
+                                    directives: [
+                                      {
+                                        name: "show",
+                                        rawName: "v-show",
+                                        value:
+                                          user.id !==
+                                            _vm.$store.state.auth.userId &&
+                                          user.follow,
+                                        expression:
+                                          "user.id !== $store.state.auth.userId && user.follow"
+                                      }
+                                    ],
+                                    staticClass: "align-self-center mr-2",
+                                    attrs: {
+                                      dark: "",
+                                      rounded: "",
+                                      color: "info"
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        $event.stopPropagation()
+                                        return _vm.unfollow(user)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("フォロー中")]
+                                )
+                              ],
+                              1
+                            )
+                          ]
                         ),
                         _vm._v(" "),
+                        _c("v-card-text", { staticClass: "pb-5" }, [
+                          _vm._v(_vm._s(user.text))
+                        ]),
+                        _vm._v(" "),
+                        _c("v-card-subtitle", { staticClass: "pt-0" }, [
+                          _vm._v(_vm._s(user.created) + "から利用しています")
+                        ]),
+                        _vm._v(" "),
+                        _c("v-divider", { staticClass: "py-0 my-0" }),
+                        _vm._v(" "),
                         _c(
-                          "v-btn",
+                          "v-card-subtitle",
                           {
-                            directives: [
-                              {
-                                name: "show",
-                                rawName: "v-show",
-                                value:
-                                  user.id !== _vm.$store.state.auth.userId &&
-                                  user.follow,
-                                expression:
-                                  "user.id !== $store.state.auth.userId && user.follow"
-                              }
-                            ],
-                            staticClass: "align-self-center mr-2",
-                            attrs: { dark: "", rounded: "", color: "info" },
-                            on: {
-                              click: function($event) {
-                                $event.stopPropagation()
-                                _vm.unfollow(user.id)
-                                user.follow = false
-                              }
-                            }
+                            staticClass:
+                              "pb-0 d-flex justify-start align-center"
                           },
-                          [_vm._v("フォロー中")]
+                          [
+                            _c("p", { staticClass: "pr-4" }, [
+                              _vm._v("フォロー中:" + _vm._s(user.followingUser))
+                            ]),
+                            _vm._v(" "),
+                            _c("p", [
+                              _vm._v("フォロワー:" + _vm._s(user.followedUser))
+                            ])
+                          ]
                         )
                       ],
                       1
                     )
-                  ]
-                ),
-                _vm._v(" "),
-                _c("v-card-text", { staticClass: "pb-5" }, [
-                  _vm._v(_vm._s(user.text))
-                ]),
-                _vm._v(" "),
-                _c("v-card-subtitle", { staticClass: "pt-0" }, [
-                  _vm._v(_vm._s(user.created) + "から利用しています")
-                ]),
-                _vm._v(" "),
-                _c("v-divider", { staticClass: "py-0 my-0" }),
-                _vm._v(" "),
-                _c(
-                  "v-card-subtitle",
-                  { staticClass: "pb-0 d-flex justify-start align-center" },
-                  [
-                    _c("p", { staticClass: "pr-4" }, [
-                      _vm._v("フォロー中:" + _vm._s(user.followingUser))
-                    ]),
-                    _vm._v(" "),
-                    _c("p", [_vm._v("フォロワー:" + _vm._s(user.followedUser))])
-                  ]
+                  ],
+                  1
                 )
               ],
               1
@@ -7667,32 +7606,42 @@ var render = function() {
                 { staticClass: "d-flex align-center justify-center pb-6" },
                 [
                   _c(
-                    "v-btn",
+                    "router-link",
                     {
-                      staticClass: "mx-md-7 mx-3",
-                      attrs: { icon: "", color: "gley" },
-                      on: {
-                        click: function($event) {
-                          return _vm.detailPost(post.id)
-                        }
-                      }
+                      staticClass: "mt-4",
+                      attrs: { to: "/detail/" + post.id, tag: "p" }
                     },
-                    [_c("v-icon", [_vm._v("mdi-clipboard-text")])],
+                    [
+                      _c(
+                        "v-btn",
+                        {
+                          staticClass: "mx-md-7 mx-3",
+                          attrs: { icon: "", color: "gley" }
+                        },
+                        [_c("v-icon", [_vm._v("mdi-clipboard-text")])],
+                        1
+                      )
+                    ],
                     1
                   ),
                   _vm._v(" "),
                   _c(
-                    "v-btn",
+                    "router-link",
                     {
-                      staticClass: "mx-md-7 mx-3",
-                      attrs: { icon: "", color: "gley" },
-                      on: {
-                        click: function($event) {
-                          return _vm.createComment(post.id)
-                        }
-                      }
+                      staticClass: "mt-4",
+                      attrs: { to: "/createComment/" + post.id, tag: "p" }
                     },
-                    [_c("v-icon", [_vm._v("mdi-message-reply")])],
+                    [
+                      _c(
+                        "v-btn",
+                        {
+                          staticClass: "mx-md-7 mx-3",
+                          attrs: { icon: "", color: "gley" }
+                        },
+                        [_c("v-icon", [_vm._v("mdi-message-reply")])],
+                        1
+                      )
+                    ],
                     1
                   ),
                   _vm._v(" "),
@@ -7749,26 +7698,32 @@ var render = function() {
                   ),
                   _vm._v(" "),
                   _c(
-                    "v-btn",
+                    "router-link",
                     {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: post.user.id === _vm.$store.state.auth.userId,
-                          expression:
-                            "post.user.id === $store.state.auth.userId"
-                        }
-                      ],
-                      staticClass: "mx-md-7 mx-3",
-                      attrs: { icon: "", color: "gley" },
-                      on: {
-                        click: function($event) {
-                          return _vm.editPost(post.id)
-                        }
-                      }
+                      staticClass: "mt-4",
+                      attrs: { to: "/edit/" + post.id, tag: "p" }
                     },
-                    [_c("v-icon", [_vm._v("mdi-pencil")])],
+                    [
+                      _c(
+                        "v-btn",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value:
+                                post.user.id === _vm.$store.state.auth.userId,
+                              expression:
+                                "post.user.id === $store.state.auth.userId"
+                            }
+                          ],
+                          staticClass: "mx-md-7 mx-3",
+                          attrs: { icon: "", color: "gley" }
+                        },
+                        [_c("v-icon", [_vm._v("mdi-pencil")])],
+                        1
+                      )
+                    ],
                     1
                   )
                 ],
@@ -7879,32 +7834,42 @@ var render = function() {
                 { staticClass: "d-flex align-center justify-center pb-6" },
                 [
                   _c(
-                    "v-btn",
+                    "router-link",
                     {
-                      staticClass: "mx-md-7 mx-3",
-                      attrs: { icon: "", color: "gley" },
-                      on: {
-                        click: function($event) {
-                          return _vm.detailPost(post.id)
-                        }
-                      }
+                      staticClass: "mt-4",
+                      attrs: { to: "/detail/" + post.id, tag: "p" }
                     },
-                    [_c("v-icon", [_vm._v("mdi-clipboard-text")])],
+                    [
+                      _c(
+                        "v-btn",
+                        {
+                          staticClass: "mx-md-7 mx-3",
+                          attrs: { icon: "", color: "gley" }
+                        },
+                        [_c("v-icon", [_vm._v("mdi-clipboard-text")])],
+                        1
+                      )
+                    ],
                     1
                   ),
                   _vm._v(" "),
                   _c(
-                    "v-btn",
+                    "router-link",
                     {
-                      staticClass: "mx-md-7 mx-3",
-                      attrs: { icon: "", color: "gley" },
-                      on: {
-                        click: function($event) {
-                          return _vm.createComment(post.id)
-                        }
-                      }
+                      staticClass: "mt-4",
+                      attrs: { to: "/createComment/" + post.id, tag: "p" }
                     },
-                    [_c("v-icon", [_vm._v("mdi-message-reply")])],
+                    [
+                      _c(
+                        "v-btn",
+                        {
+                          staticClass: "mx-md-7 mx-3",
+                          attrs: { icon: "", color: "gley" }
+                        },
+                        [_c("v-icon", [_vm._v("mdi-message-reply")])],
+                        1
+                      )
+                    ],
                     1
                   ),
                   _vm._v(" "),
@@ -7961,26 +7926,32 @@ var render = function() {
                   ),
                   _vm._v(" "),
                   _c(
-                    "v-btn",
+                    "router-link",
                     {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: post.user.id === _vm.$store.state.auth.userId,
-                          expression:
-                            "post.user.id === $store.state.auth.userId"
-                        }
-                      ],
-                      staticClass: "mx-md-7 mx-3",
-                      attrs: { icon: "", color: "gley" },
-                      on: {
-                        click: function($event) {
-                          return _vm.editPost(post.id)
-                        }
-                      }
+                      staticClass: "mt-4",
+                      attrs: { to: "/edit/" + post.id, tag: "p" }
                     },
-                    [_c("v-icon", [_vm._v("mdi-pencil")])],
+                    [
+                      _c(
+                        "v-btn",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value:
+                                post.user.id === _vm.$store.state.auth.userId,
+                              expression:
+                                "post.user.id === $store.state.auth.userId"
+                            }
+                          ],
+                          staticClass: "mx-md-7 mx-3",
+                          attrs: { icon: "", color: "gley" }
+                        },
+                        [_c("v-icon", [_vm._v("mdi-pencil")])],
+                        1
+                      )
+                    ],
                     1
                   )
                 ],
@@ -25960,7 +25931,6 @@ var actions = {
         root: true
       });
     })["catch"](function (error) {
-      console.log(error);
       commit('alert/setAlert', {
         'message': 'ログインに失敗しました',
         'type': 'danger'
@@ -25972,7 +25942,6 @@ var actions = {
   logout: function logout(_ref2) {
     var commit = _ref2.commit;
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/logout').then(function (res) {
-      console.log('success');
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.headers.common['Authorization'] = '';
       commit('logout');
       _router__WEBPACK_IMPORTED_MODULE_1__["default"].push({
@@ -25984,7 +25953,6 @@ var actions = {
         root: true
       });
     })["catch"](function (error) {
-      console.log(error);
       commit('alert/setAlert', {
         'message': 'ログアウトに失敗しました'
       }, {
