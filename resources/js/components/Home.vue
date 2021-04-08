@@ -56,12 +56,13 @@
         >もっと見る</v-btn>
       </div>
     </v-container>
-    <div class="d-flex justify-center align-center" v-show="loading">
+    <div class="d-flex justify-center align-center">
       <v-progress-circular
         :size="70"
         :width="7"
         color="info"
         indeterminate
+        v-show="loading"
       ></v-progress-circular>
     </div>
   </div>

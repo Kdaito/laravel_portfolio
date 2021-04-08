@@ -2802,6 +2802,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -6416,19 +6417,17 @@ var render = function() {
       _vm._v(" "),
       _c(
         "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.loading,
-              expression: "loading"
-            }
-          ],
-          staticClass: "d-flex justify-center align-center"
-        },
+        { staticClass: "d-flex justify-center align-center" },
         [
           _c("v-progress-circular", {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.loading,
+                expression: "loading"
+              }
+            ],
             attrs: { size: 70, width: 7, color: "info", indeterminate: "" }
           })
         ],
