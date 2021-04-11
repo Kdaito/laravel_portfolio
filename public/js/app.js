@@ -41322,7 +41322,7 @@ var render = function() {
           }
         },
         [
-          _c("v-toolbar-title", [_vm._v("title")]),
+          _c("v-toolbar-title", [_vm._v("OurPost")]),
           _vm._v(" "),
           _c("v-spacer"),
           _vm._v(" "),

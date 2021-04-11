@@ -9,7 +9,7 @@
       clipped-left
       clipped-right
     >
-      <v-toolbar-title>title</v-toolbar-title>
+      <v-toolbar-title>OurPost</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-app-bar-nav-icon @click="drawer = true" class="d-lg-none"></v-app-bar-nav-icon>
 
