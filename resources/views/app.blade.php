@@ -10,6 +10,13 @@
       .bg-b{
         background: rgb(250, 250, 250)
       }
+      .post-btn{
+        position: fixed;
+        bottom: 60px;
+        right: 20px;
+        z-index: 1000;
+      }
+      
     </style>
 </head>
 <body>
@@ -20,6 +27,7 @@
         <v-container>
           <router-view></router-view>
         </v-container>
+        <button-component class="post-btn"></button-component>
       </v-main>
     </v-app>
 </div>
