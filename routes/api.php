@@ -22,6 +22,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/posts/userPosts', 'PostController@userPosts');
     Route::post('/posts/likePosts', 'PostController@likePosts');
     Route::post('/posts/detailPost', 'PostController@detailPost');
+    Route::post('/posts/deletePost', 'PostController@deletePost');
 
     Route::get('/user', 'JWTAuthController@user');
     Route::get('/refresh', 'JWTAuthController@refresh');

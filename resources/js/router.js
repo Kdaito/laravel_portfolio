@@ -1,21 +1,21 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router';
 
-import Home from './components/Home';
-import Search from './components/Search';
-import Post from './components/Post';
-import EditPost from './components/EditPost';
-import EditProfile from './components/EditProfile';
-import CreateComment from './components/CreateComment';
-import Profile from './components/Profile';
-import LikePosts from './components/profile/LikePosts';
-import UserPosts from './components/profile/UserPosts';
-import ShowLikeUsers from './components/ShowLikeUsers';
-import Login from './components/Auth/Login.vue';
-import Register from './components/Auth/Register.vue';
-import Detail from './components/PostDetail.vue';
-import FollowedUser from './components/FollowedUser';
-import FollowingUser from './components/FollowingUser';
+import Home from './components/Home/';
+import Search from './components/Search/';
+import Post from './components/Post/';
+import Detail from './components/Post/Detail';
+import EditPost from './components/Post/Edit';
+import ShowLikeUsers from './components/Post/ShowLikeUsers';
+import CreateComment from './components/Comment';
+import Profile from './components/Profile/';
+import LikePosts from './components/Profile/LikePosts';
+import UserPosts from './components/Profile/UserPosts';
+import EditProfile from './components/Profile/Edit';
+import Login from './components/Auth/Login';
+import Register from './components/Auth/Register';
+import FollowedUser from './components/Follow/FollowedUser';
+import FollowingUser from './components/Follow/FollowingUser';
 
 import store from './store/index';
 
@@ -108,6 +108,12 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  if (sessionStorage.getItem('postApp')) {
+    const strageData = JSON.parse(sessionStorage.getItem('postApp'));
+    if (strageData.auth.token) {
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + strageData.auth.token;
+    }
+  }
   store.commit('alert/setAlert', {'message': ''});
   if(to.matched.some(record => record.meta.requiresAuth)) {
     if(store.getters['auth/isLogin'] === false) {

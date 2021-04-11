@@ -56,6 +56,8 @@
         tile
         v-for="comment in comments"
         :key="comment.index"
+        max-width="500px"
+        class="mx-auto"
       >
         <v-card-title class="text-5 pb-0" v-text="comment.user.name"></v-card-title>
         <v-card-text class="text-h6" v-text="comment.text"></v-card-text>

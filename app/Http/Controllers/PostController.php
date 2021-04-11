@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\User;
+use App\Models\PostComment;
 
 class PostController extends Controller
 {
@@ -188,8 +189,14 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        Post::where('id', $id)->delete();
+    
+    public function deletePost(Request $request){
+        $post = Post::find($request->id);
+        // $comments = PostComment::where('post_id', $request->id)->get();
+        $comments = $post->comments->each(function ($item) {
+            $item->delete();
+        });
+        $post->delete();
+        // return $comments;
     }
 }

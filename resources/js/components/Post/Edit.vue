@@ -136,14 +136,15 @@ export default {
       this.$router.go(-1)
     },
     deletePost(){
-        axios.delete(`/api/posts/${this.$route.params.id}`)
-        .then(res => {
-          this.$router.go(-1)
-        })
-        .catch(err => {
-          this.showConsoleLog(err)
-        })
-      
+      axios.post(`/api/posts/deletePost`, {
+        id: this.$route.params.id
+      })
+      .then(res => {
+        this.$router.push({path: `/profile/${this.$store.state.auth.userId}`})
+      })
+      .catch(err => {
+        this.showConsoleLog(err)
+      })
     }
   }
 }
