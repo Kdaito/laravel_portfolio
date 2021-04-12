@@ -65,6 +65,22 @@
         v-show="loading"
       ></v-progress-circular>
     </div>
+    <div class="d-sm-none">
+      <router-link to="/post" tag="p">
+        <v-btn
+          class="mx-2 post-btn"
+          fab
+          dark
+          x-large
+          color="info"
+          to="/post"
+        >
+          <v-icon dark>
+            mdi-pencil
+          </v-icon>
+        </v-btn>
+      </router-link>
+    </div>
   </div>
 </template>
 
@@ -122,5 +138,10 @@ export default {
 </script>
 
 <style>
-
+  .post-btn{
+    position: fixed;
+    bottom: 60px;
+    right: 20px;
+    z-index: 1000;
+  }
 </style>

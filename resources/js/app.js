@@ -35,7 +35,6 @@ require('./bootstrap');
 
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('header-component', require('./components/Header').default);
-Vue.component('button-component', require('./components/Post/Button').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
