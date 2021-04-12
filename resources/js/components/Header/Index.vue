@@ -9,7 +9,10 @@
       clipped-left
       clipped-right
     >
-      <v-toolbar-title>OurPost</v-toolbar-title>
+    <div class="logo-image-wrapper">
+      <img  class="logo-image" :src="'/img/logo.PNG'">
+    </div>
+      <v-toolbar-title>Kobanashi</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-app-bar-nav-icon @click="drawer = true" class="d-lg-none"></v-app-bar-nav-icon>
 
@@ -265,6 +268,11 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.logo-image-wrapper {
+  height: 100%;
+}
+.logo-image {
+  max-height: 100%;
+}
 </style>

@@ -2,7 +2,8 @@
 <html lang="ja">
 <head>
     <meta charset="utf-8">
-    <title>OurPost</title>
+    <title>Kobanashi</title>
+    <link rel="shortcut icon" href="/img/logo.PNG">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="{{ mix('/css/app.css') }}" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}">
