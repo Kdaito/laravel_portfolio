@@ -41507,7 +41507,7 @@ var render = function() {
           _c("div", { staticClass: "logo-image-wrapper" }, [
             _c("img", {
               staticClass: "logo-image",
-              attrs: { src: "/img/logo.PNG" }
+              attrs: { src: "/img/logo.svg" }
             })
           ]),
           _vm._v(" "),

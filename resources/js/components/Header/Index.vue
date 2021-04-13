@@ -10,7 +10,7 @@
       clipped-right
     >
     <div class="logo-image-wrapper">
-      <img  class="logo-image" :src="'/img/logo.PNG'">
+      <img  class="logo-image" :src="'/img/logo.svg'">
     </div>
       <v-toolbar-title>Kobanashi</v-toolbar-title>
       <v-spacer></v-spacer>
